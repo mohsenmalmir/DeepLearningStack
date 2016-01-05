@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<data>
+    <layer type="Image" name="image1">
+        <input>input</input>
+        <batchsize>256</batchsize>
+        <imagesize>128</imagesize>
+        <imagechannels>3</imagechannels>
+    </layer>
+    <layer type="Conv" name="conv1">
+        <input>image1</input>
+        <numfilters>48</numfilters>
+        <filtersize>11</filtersize>
+        <convpad>5</convpad>
+        <convstride>3</convstride>
+        <bias>0.</bias>
+    </layer>
+    <layer type="Rectifier" name="rct1">
+        <input>conv1</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="LRN" name="norm1">
+        <input>rct1</input>
+        <normsize>5</normsize>
+        <normalpha>0.0001</normalpha>
+        <normbeta>0.75</normbeta>
+    </layer>
+    <layer type="Pool" name="pool1">
+        <input>norm1</input>
+        <poolds>3</poolds>
+        <poolstride>2</poolstride>
+    </layer>
+    <layer type="Conv" name="conv2">
+        <input>pool1</input>
+        <numfilters>128</numfilters>
+        <filtersize>5</filtersize>
+        <convpad>2</convpad>
+        <convstride>1</convstride>
+        <bias>1.</bias>
+    </layer>
+    <layer type="Rectifier" name="rct2">
+        <input>conv2</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="LRN" name="norm2">
+        <input>rct2</input>
+        <normsize>5</normsize>
+        <normalpha>0.0001</normalpha>
+        <normbeta>0.75</normbeta>
+    </layer>
+    <layer type="Pool" name="pool2">
+        <input>norm2</input>
+        <poolds>3</poolds>
+        <poolstride>2</poolstride>
+    </layer>
+    <layer type="Conv" name="conv3">
+        <input>pool2</input>
+        <numfilters>192</numfilters>
+        <filtersize>3</filtersize>
+        <convpad>1</convpad>
+        <convstride>1</convstride>
+        <bias>0.</bias>
+    </layer>
+    <layer type="Rectifier" name="rct3">
+        <input>conv3</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="LRN" name="norm3">
+        <input>rct3</input>
+        <normsize>5</normsize>
+        <normalpha>0.0001</normalpha>
+        <normbeta>0.75</normbeta>
+    </layer>
+    <layer type="Conv" name="conv4">
+        <input>norm3</input>
+        <numfilters>192</numfilters>
+        <filtersize>3</filtersize>
+        <convpad>1</convpad>
+        <convstride>1</convstride>
+        <bias>1.</bias>
+    </layer>
+    <layer type="Rectifier" name="rct4">
+        <input>conv4</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="LRN" name="norm4">
+        <input>rct4</input>
+        <normsize>5</normsize>
+        <normalpha>0.0001</normalpha>
+        <normbeta>0.75</normbeta>
+    </layer>
+    <layer type="Conv" name="conv5">
+        <input>norm4</input>
+        <numfilters>128</numfilters>
+        <filtersize>3</filtersize>
+        <convpad>1</convpad>
+        <convstride>1</convstride>
+        <bias>1.</bias>
+    </layer>
+    <layer type="Rectifier" name="rct5">
+        <input>conv5</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="LRN" name="norm5">
+        <input>rct5</input>
+        <normsize>5</normsize>
+        <normalpha>0.0001</normalpha>
+        <normbeta>0.75</normbeta>
+    </layer>
+    <layer type="Pool" name="pool5">
+        <input>norm5</input>
+        <poolds>3</poolds>
+        <poolstride>2</poolstride>
+    </layer>
+    <layer type="Flatten" name="flatten1">
+        <input>pool5</input>
+    </layer>
+    <layer type="LU" name="fc1">
+        <input>flatten1</input>
+        <numunits>512</numunits>
+        <CloneCoeff>0.5</CloneCoeff>
+        <bias>1.0</bias>
+    </layer>
+    <layer type="Rectifier" name="rctfc1">
+        <input>fc1</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="Dropout" name="drop1">
+        <input>rctfc1</input>
+        <Prob>0.5</Prob>
+        <CloneP>1.</CloneP>
+    </layer>
+    <layer type="LU" name="fc2">
+        <input>drop1</input>
+        <numunits>512</numunits>
+        <CloneCoeff>0.5</CloneCoeff>
+        <bias>1.0</bias>
+    </layer>
+    <layer type="Rectifier" name="rctfc2">
+        <input>fc2</input>
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+    </layer>
+    <layer type="Dropout" name="drop2">
+        <input>rctfc2</input>
+        <Prob>0.5</Prob>
+        <CloneP>1.</CloneP>
+    </layer>
+    <layer type="LU" name="fc3">
+        <input>drop2</input>
+        <numunits>136</numunits>
+        <CloneCoeff>1.</CloneCoeff>
+        <bias>0.0</bias>
+    </layer>
+    <layer type="Softmax" name="softmax1">
+        <input>fc3</input>
+    </layer>
+</data>

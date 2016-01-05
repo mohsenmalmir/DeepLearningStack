@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<data>
+    <layer type="Image" name="image1">
+        <batchsize></batchsize>
+        <imagesize></imagesize>
+        <imagechannels></imagechannels>
+        <organization></organization>
+    </layer>
+    <layer type="Data" name="data1">
+        <batchsize></batchsize>
+        <datasize></datasize>
+   </layer>
+	<layer type="Conv" name="conv1">
+        <input></input>
+        <numfilters></numfilters>
+        <filtersize></filtersize>
+        <convpad></convpad>
+        <convstride></convstride>
+    </layer>
+    <layer type="Pool" name="pool1">
+        <poolds></poolds>
+        <poolstride></poolstride>
+        <input></input>
+    </layer>
+    <layer type="LRN" name="norm1">
+        <normsize></normsize>
+        <normalpha></normalpha>
+        <normbeta></normbeta>
+        <input></input>
+    </layer>
+    <layer type="Rectifier" name="rct1">
+        <posslope>
+            <min>1.0</min>
+            <max>1.0</max>
+            <init>1.0</init>
+            <method>Constant</method>
+        </posslope>
+        <negslope>
+            <min>0.0</min>
+            <max>0.0</max>
+            <init>0.0</init>
+            <method>Constant</method>
+        </negslope>
+        <input></input>
+    </layer>
+    <layer type="Dropout" name="drop1">
+        <input></input>
+        <Prob></Prob>
+        <CloneP></CloneP>
+    </layer>
+    <layer type="LU" name="lu1">
+        <numunits></numunits>
+        <input></input>
+        <CloneCoeff></CloneCoeff>
+    </layer>
+    <layer type="Softmax" name="softmax1">
+        <input></input>
+    </layer>
+    <layer type="Sigmoid" name="sig1">
+        <input></input>
+    </layer>
+    <layer type="Tanh" name="tanh1">
+        <input></input>
+    </layer>
+    <layer type="Concatenate" name="concat1">
+        <input></input>
+        <input></input>
+    </layer>
+    <layer type="Flatten" name="flatten1">
+        <input></input>
+    </layer>
+    <layer type="ActionSelection" name="act1">
+        <input></input>
+        <type>soft</type>
+    </layer>
+    <layer type="NaiveBayesBeliefUpdate" name="nbbu">
+        <input></input>
+    </layer>
+</data>
