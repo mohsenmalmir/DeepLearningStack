@@ -1,4 +1,4 @@
-A sample Python project
+DeepLearningStack
 =======================
 
 A project that helps develop deep learning models using Theano with xml configuration.
