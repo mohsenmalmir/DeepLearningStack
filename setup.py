@@ -19,7 +19,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='DeepLearningStack',
-    version='1.0',
+    version='1.0.0',
     description='A Python package for deep learning',
     long_description=long_description,
     url='https://github.com/mohsenmalmir/DeepLearningStack',
