@@ -19,25 +19,15 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='DeepLearningStack',
-
-    # Versions should comply with PEP440.  For a discussion on single-sourcing
-    # the version across setup.py and the project code, see
-    # https://packaging.python.org/en/latest/single_source_version.html
     version='1.0',
-
     description='A Python package for deep learning',
     long_description=long_description,
-
-    # The project's main homepage.
     url='https://github.com/mohsenmalmir/DeepLearningStack',
-
     # Author details
     author='Mohsen Malmir',
-    author_email='mmalmir@ucsd.edu,mohsen.malmir@gmail.com',
-
+    author_email='mmalmir@ucsd.edu',
     # Choose your license
     license='MIT',
-
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         # How mature is this project? Common values are
@@ -66,7 +56,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='deep learning reinforcement learning',
+    keywords='deep recurrent neural network reinforcement learning',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
