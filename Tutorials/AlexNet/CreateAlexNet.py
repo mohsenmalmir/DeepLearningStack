@@ -20,7 +20,7 @@ import sys
 sys.setrecursionlimit(50000) 
 
 
-from DeepNet2 import DeepNet
+from DeepLearningStack import DeepNet
 
 
 
