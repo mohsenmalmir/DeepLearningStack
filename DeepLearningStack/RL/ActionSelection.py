@@ -14,10 +14,11 @@ class ActionSelection(object):
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
             Create an action selection layer for RL deepnet
+            The action selection either picks the 'max' value action, or 'soft' action with probability proportional to its value
             
-            :type layer_def: Element, xml containing configu for Conv layer
+            :type layer_def: Element, xml containing configuration for this layer
             
-            :type input: tensor.matrix
+            :type input: tensor.matrix, 2D
             
             :type input_shape: tuple or list of size 2
             :param input_shape: [c,b] b is the batch_size, c is data dimensionality
@@ -25,8 +26,6 @@ class ActionSelection(object):
             :type rs: a random number generator used to initialize weights
             """
         mechanism         = layer_def.find("type").text
-#        epsilon           = float(layer_def.find("epsilon").text)
-#        assert(epsilon>=0 and epsilon<=1.)
         self.input        = input
         self.input_shape  = input_shape
         num_acts,batch_sz = input_shape
@@ -43,14 +42,6 @@ class ActionSelection(object):
         else:
             print "invalid action-selection type"
             raise
-        #epsilon-greedy
-#        if epsilon>0.:
-#            #select with probability epsilon to do a random action for each data in the batch
-#            rndaction     = rs.binomial((1,batch_sz),p=epsilon).astype(theano.config.floatX).reshape([-1])
-#            rndidx        = rs.random_integers((1,batch_sz),low=0,high=num_acts-1).reshape([-1])#randomly selected action
-#            actions       = rndaction * rndidx + (1.-rndaction) * actions#selected actions for each game in the batch
-        #the output of each layer should be at least 2 dimensions
         self.output       = actions.reshape([1,batch_sz])
-#        self.cumsum       = rndunif
         self.params       = []
 

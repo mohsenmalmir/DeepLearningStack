@@ -18,7 +18,7 @@ class Pool(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a max-pooling layer, that pools across a neighborhood of the inputs 
             
             :type layer_def: Element, xml containing configu for Conv layer
             

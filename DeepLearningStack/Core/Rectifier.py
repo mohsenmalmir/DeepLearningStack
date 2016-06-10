@@ -15,11 +15,12 @@ class Rectifier(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a rectification layer 
+            The rectification is a1 * (x>0)+ a2 * (x<0), with a1 and a2 being learned or constant
             
             :type layer_def: Element, xml containing configu for Conv layer
             
-            :type input: tensor.tensor4
+            :type input: tensor.matrix
             
             :type input_shape: tuple or list of size 4
             :param input_shape: [channels,height,width,batchsize] c01b

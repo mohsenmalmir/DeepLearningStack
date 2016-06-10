@@ -14,16 +14,20 @@ class Dropout(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a dropout layer, usually used after a fully connected layer for regularization 
             
             :type layer_def: Element, xml containing configu for Conv layer
             
-            :type input: tensor.tensor4
+            :type input: tensor.matrix
             
-            :type input_shape: tuple or list of size 4
-            :param input_shape: [channels,height,width,batchsize] c01b
+            :type input_shape: tuple or list of size 2
+            :param input_shape: [channels,batchsize] c01b
             
             :type rs: a random number generator used to initialize weights
+
+            :type clone_from: indicates that this is a clone, therefore the dropout is replaced by averaging 
+                               CloneP is the probability used to multiply to the weights
+                               CloneP should be the same as P, but is left separate for flexibility
             """
         P = float(layer_def.find("Prob").text)
         if clone_from!=None:

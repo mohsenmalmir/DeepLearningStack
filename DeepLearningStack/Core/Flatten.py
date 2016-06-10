@@ -17,7 +17,7 @@ class Flatten(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a flatten layer, which converts a theano.tensor4 to theano.matrix by flattening across width and height, e.g. dimensions 1 and 2 
             
             :type layer_def: Element, xml containing configu for Conv layer
             
@@ -36,8 +36,7 @@ class Flatten(object):
             :type input: theano.tensor.dtensor4
             :arrangement: c01b
             
-            :type ndim: input to the flatten
-            :param
+            :type input_shape: tuple or list containing the size of the input 
             """
         self.input         = input
         batch_size         = input_shape[-1]#c01b

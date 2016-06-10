@@ -17,7 +17,7 @@ class LRN(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a local response normalization layer, using crossmap normalization within the specified neighborhood size 
             
             :type layer_def: Element, xml containing configu for Conv layer
             
@@ -36,10 +36,8 @@ class LRN(object):
         """
             Allocate a LeNetConvPoolLayer with shared variable internal parameters.
             
-            :type input: theano.tensor.dtensor4
-            :arrangement: c01b
             
-            :type normSizeAlphaBeta: tuple or list of size 3
+            type normSizeAlphaBeta: tuple or list of size 3
             :param normSizeAlphaBeta: (size,alpha,beta)
             """
 

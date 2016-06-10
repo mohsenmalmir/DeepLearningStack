@@ -7,12 +7,32 @@ import numpy as np
 import theano
 import theano.tensor as T
 
-from DirichletUnit import DirichletUnit
 
 
 # implementing softmax operation
 class DirichletLayer(object):
     def __init__(self,layer_def,inputs,inputs_shape,rs,clone_from=None):
+        """
+            Create a Dirichlet layer, according to the following paper:
+                Malmir M, Sikka K, Forster D, Fasel I, Movellan JR, Cottrell GW. 
+                Deep Active Object Recognition by Joint Label and Action Prediction. 
+                arXiv preprint arXiv:1512.05484. 2015 Dec 17. 
+            Each unit in this layer encodes a Dicihlet distribution over its input.
+            The input is assumed to be a belief vector, i.e. \sum_i input[i] = 1, 0 <= input_i <= 1 for all i
+                 
+            :type layer_def: Element, xml containing configu for Conv layer
+
+            :type inputs: a list of [belief_in, actions, objects, previous_belief] 
+            :param inputs[0], belief_in, is a theano.matrix which contains belief vectors in its columns
+            :param inputs[1], actions, theano.ivector, list of actions for each column of belief_in 
+            :param inputs[2], objects, theano.ivector, list of objects for each column of belief_in 
+            :param inputs[3], previous_belief, theano.matrix, used to accumulate beliefs over time 
+            
+            
+            :type input_shapes: list of sizes of inputs 
+
+            :type rs: a random number generator used to initialize weights
+        """
         assert(len(inputs) == 4)#belief dim x bacth_sz, actions: 1 x batch_size, objects 1 x batch_sz, accbelief (numActs*numObjs) x batch_sz
         beliefs,actions,objects,accbeliefs = inputs
         self.inputs         = inputs# beliefs, actions, objects
@@ -100,36 +120,3 @@ class DirichletLayer(object):
         self.inputs_shape   = inputs_shape
         #self.output_shape   = [dim,batch_size]
         self.output_shape   = [num_dirichlets,batch_size]
-#        self.params         = [self.DirichletUnits[k].alpha for k in self.DirichletUnits.keys()]
-#        
-#        #precalculated updates for Dirichlet units
-#        self.updates        = []
-#        for o in range(self.numObjects):
-#            for a in range(self.numActions):
-#                #self.alphas.append( T.reshape( self.DirichletUnits[(o,a)].update[0],[dim,1]) )
-#                #self.updates.append( T.reshape(self.DirichletUnits[(o,a)].update[1],[dim,1]) )
-#                self.updates.append( self.DirichletUnits[(o,a)].update) 
-#        self.updates        = T.concatenate( self.updates)
-#
-#
-#        self.log_p_ao       = []
-#        for o in range(self.numObjects):
-#            for a in range(self.numActions):
-#                self.log_p_ao.append( self.DirichletUnits[(o,a)].l_p_ao)
-#
-#        self.log_p_ao       = T.sum(self.log_p_ao)
-#
-#
-#        self.min_alpha     = []
-#        self.max_alpha     = []
-#        for o in range(self.numObjects):
-#            for a in range(self.numActions):
-#                self.min_alpha.append( T.min(self.DirichletUnits[(o,a)].alpha))
-#                self.max_alpha.append( T.max(self.DirichletUnits[(o,a)].alpha))
-#        self.min_alpha     = T.min(self.min_alpha) 
-#        self.max_alpha     = T.max(self.max_alpha)
-
-        
-        
-    
-

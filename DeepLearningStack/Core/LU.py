@@ -14,11 +14,14 @@ class LU(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a linear unit, which simply multiplies the input to a weight matrix to produce the output 
+            output is simply input * W + b, where b is the bias
             
             :type layer_def: Element, xml containing configu for Conv layer
             
-            :type input: tensor.tensor4
+            :type input: tensor.matrix
+
+            :type input_shape: list or tuple of the size of the input 
             
             :type rs: a random state
             """

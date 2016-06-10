@@ -30,6 +30,11 @@ from Tanh                   import Tanh
 from NaiveBayesBeliefUpdate import NaiveBayesBeliefUpdate
 from DepthConcat			import DepthConcat
 from DirichletLayer         import DirichletLayer
+from LSTM                   import LSTM 
+from BatchNormalize         import BatchNormalize
+from ElementWise            import ElementWise
+from Gaussian               import Gaussian
+from GaussianObs            import GaussianObs
 
 #maps type names into classes
 type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU,"Pool":Pool,
@@ -39,6 +44,10 @@ type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU
                     "NaiveBayesBeliefUpdate":NaiveBayesBeliefUpdate,
 					"DepthConcat":DepthConcat,
                     "DirichletLayer":DirichletLayer,
+                    "LSTM":LSTM, "BatchNormalize":BatchNormalize,
+                    "ElementWise":ElementWise,
+                    "Gaussian":Gaussian,
+                    "GaussianObs":GaussianObs,
                   }
 # Stack of ReLU followed by LU
 class DeepNet(object):
@@ -53,8 +62,11 @@ class DeepNet(object):
         :param input: symbolic variable that represents image batch
 
         :type configFile: filename containing the network architecture
-        :param image_shape: string
+         
 
+        :type clone_from: A computation graph to clone from 
+        :param clone_from: This graph should contain all the weights, from which the current network will be initialized.
+        :                   This is useful in cases such as transferring the weights to a different architecture that shares some layers  
         """
         self.supplied_inputs      = input#dict of name:symvar
         self.output_dims          = dict()#dictionary of inp:size for the input
@@ -70,11 +82,17 @@ class DeepNet(object):
         self.layers      = []
         self.name2layer  = dict()
         self.params      = []
+        self.tied        = dict()
         while not netbuilt:
             for layer in layers_def:
                 layer_name,layer_type = layer.attrib["name"],layer.attrib["type"]
+                #print layer_name
                 layer_input           = layer.find("input").text if layer.find("input") is not None else None
-                if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer"]:
+                tie_from              = layer.find("tie").text if layer.find("tie") is not None else None
+                #if a layer's params are tied to another layer, make sure the first layer is already created
+                if tie_from != None and tie_from not in self.name2layer.keys():
+                    continue
+                if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer","LSTM","ElementWise","GaussianObs"]:
                     #check for all inputs
                     inputs           = layer.findall("input")
                     inputs_text      = [inp.text for inp in inputs]
@@ -82,10 +100,16 @@ class DeepNet(object):
                     if np.all(input_satiesfied):
                         inputs       = [self.supplied_inputs[inp] for inp in inputs_text]
                         output_dims  = [self.output_dims[inp] for inp in inputs_text]
-                        if clone_from!=None:#if cloning, then initialize this layer from the clone
-                            newLayer    = type2class[layer_type](layer,inputs,output_dims,rng,clone_from.name2layer[layer_name])
+                        #if cloning, then initialize this layer from the clone
+                        if clone_from!=None and (layer_name in clone_from.name2layer.keys()):
+                            newLayer    = type2class[layer_type](layer,inputs,output_dims,rng,clone_from=clone_from.name2layer[layer_name])
+                            self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
+                        elif tie_from!=None:#if the parameters are tied to gether
+                            newLayer    = type2class[layer_type](layer,inputs,output_dims,rng,clone_from=self.name2layer[tie_from])
+                            self.tied[layer_name] = True 
                         else:
                             newLayer    = type2class[layer_type](layer,inputs,output_dims,rng)
+                            self.tied[layer_name] = False 
                         self.layers.append(newLayer)#create layer from xml definition
                         self.name2layer[layer_name]          = newLayer
                         self.params                         += newLayer.params
@@ -98,10 +122,16 @@ class DeepNet(object):
                     print "creating layer:",layer_name, "with input: ",layer_input
                     #create the layer, add it to self.layers
                     #each layer is initialized by its definition from xml, its input variable, the dimensions of its input and rs
-                    if clone_from!=None:#if cloning, then initialize this layer from the clone
-                        newLayer                         = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from.name2layer[layer_name])
+                    #if cloning, then initialize this layer from the clone
+                    if clone_from!=None and (layer_name in clone_from.name2layer.keys()):
+                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=clone_from.name2layer[layer_name])
+                        self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
+                    elif tie_from!=None:#if the parameters are tied to gether
+                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=self.name2layer[tie_from])
+                        self.tied[layer_name] = True 
                     else:
-                        newLayer                         = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng)
+                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng)
+                        self.tied[layer_name] = False 
                     self.layers.append(newLayer)#create layer from xml definition
                     self.name2layer[layer_name]          = newLayer
                     self.params                         += newLayer.params

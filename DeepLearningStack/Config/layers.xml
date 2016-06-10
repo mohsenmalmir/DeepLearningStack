@@ -76,4 +76,33 @@
     <layer type="NaiveBayesBeliefUpdate" name="nbbu">
         <input></input>
     </layer>
+    <layer type="BatchNormalize" name="bn">
+        <input></input>
+        <epsilon></epsilon>
+    </layer>
+    <layer type="ElementWise" name="ew">
+        <input></input>
+        <input></input>
+        <operation></operation>
+    </layer>
+    <layer type="LSTM" name="lstm">
+        <input>in</input>
+        <input>gate_in</input>
+        <input>prev_output</input>
+        <numunits></numunits>
+        <bias></bias>
+    </layer>
+    <layer type="Gaussian" name="gn1">
+        <numunits></numunits>
+        <input></input>
+        <covariance></covariance>
+    </layer>
+    <layer type="GaussianObs" name="obs">
+        <numlabels>136</numlabels>
+        <numactions>100</numactions>
+        <featdim>16384</featdim>
+        <input>actions</input>
+        <input>features</input>
+        <covariance>diag</covariance>
+    </layer>
 </data>

@@ -13,11 +13,11 @@ class Sigmoid(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a sigmoid layer, with outputs in the range 0,1 
             
             :type layer_def: Element, xml containing configu for Conv layer
             
-            :type input: tensor.tensor4
+            :type input: tensor.matrix
             
             :type input_shape: tuple or list of size 4
             :param input_shape: [channels,height,width,batchsize] c01b

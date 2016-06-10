@@ -13,11 +13,11 @@ class Normalize(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a normalization layer, so that the output sums to 1 across dimension 0, e.g. batch
             
             :type layer_def: Element, xml containing configu for Conv layer
             
-            :type input: tensor.tensor4
+            :type input: tensor.matrix
             
             :type input_shape: tuple or list of size 4
             :param input_shape: [channels,height,width,batchsize] c01b

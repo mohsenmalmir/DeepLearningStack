@@ -13,11 +13,16 @@ class NaiveBayesBeliefUpdate(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,inputs,inputs_shape,rs,clone_from=None):
         """
-            Create a concatenation layer
+            Create a Naive Bayes Belief update, according to the following paper:
+            Malmir M, Sikka K, Forster D, Movellan J, Cottrell GW. 
+            Deep Q-learning for Active Recognition of GERMS: 
+            Baseline performance on a standardized dataset for active learning. 
+            InProceedings of the British Machine Vision Conference (BMVC), pages (pp. 161-1). 
+            The output is element-wise product of the inputs, normalized to sum to 1
             
             :type layer_def: Element, xml containing configu for Conv layer
             
-            :type input: list or tuple of variables to concatenate
+            :type inputs: list of inputs 
             
             :type input_shape: list or tuple of the size of inputs
             

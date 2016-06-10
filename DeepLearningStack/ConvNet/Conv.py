@@ -17,7 +17,9 @@ class Conv(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a (GPU only) convolutional layer with shared variable internal parameters.
+            Each filter has a corresponding bias
+            
             
             :type layer_def: Element, xml containing configu for Conv layer
 
@@ -39,7 +41,8 @@ class Conv(object):
         image_channels,image_size,_,batch_size    = input_shape
         filter_shape                              = [image_channels,filter_size,filter_size,num_filters]#c01b
         if clone_from is None:
-            W_bound   = 0.01#numpy.sqrt(6. / (fan_in + fan_out))
+            #W_bound   = 0.01#numpy.sqrt(6. / (fan_in + fan_out))
+            W_bound   = np.sqrt( 2. / (filter_size*filter_size*image_channels) )#initialization from PRELU 
             self.W    = theano.shared( np.asarray(rng.normal(loc=0., scale=W_bound, size=filter_shape), dtype=theano.config.floatX), borrow=True )
             self.b    = theano.shared( np.asarray(init_bias*np.ones((num_filters,)), dtype=theano.config.floatX), borrow=True )
         else:

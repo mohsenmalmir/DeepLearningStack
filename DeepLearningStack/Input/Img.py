@@ -13,7 +13,7 @@ class Img(object):
     """ Initialize from xml definition node """
     def __init__(self,layer_def,input,input_shape,rs,clone_from=None):
         """
-            Create a convolutional layer with shared variable internal parameters.
+            Create a 4D input to the network, theano.tensor4, with arrangement of the input as c01b 
             
             :type layer_def: Element, xml containing configu for Conv layer
 
@@ -30,7 +30,6 @@ class Img(object):
         self.init(input, input_shape, batch_size,image_size,image_channels)
     
     
-    """Pool Layer of a convolutional network """
     def init(self, input, input_shape, batch_size, image_size, image_channels):
         """
             Create an image layer for deep net.

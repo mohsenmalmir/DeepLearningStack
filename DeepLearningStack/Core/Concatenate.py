@@ -14,6 +14,8 @@ class Concatenate(object):
     def __init__(self,layer_def,inputs,inputs_shape,rs,clone_from=None):
         """
             Create a concatenation layer
+            The inputs is a list of matrices, the output is the concatenation of these matrices across dimension 0
+            
             
             :type layer_def: Element, xml containing configu for Conv layer
             
