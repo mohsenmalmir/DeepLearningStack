@@ -59,3 +59,7 @@ target/
 
 # OSX directory info
 .DS_Store
+
+
+# VIM swap files
+*.swp
