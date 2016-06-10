@@ -20,7 +20,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='DeepLearningStack',
     version='1.0.0',
-    description='A Python package for deep learning',
+    description='A Python package for creating deep network graphs using Theano',
     long_description=long_description,
     url='https://github.com/mohsenmalmir/DeepLearningStack',
     # Author details
