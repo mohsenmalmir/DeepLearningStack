@@ -1,1 +1,1 @@
-import Core/DeepNet
+from .Core import DeepNet
