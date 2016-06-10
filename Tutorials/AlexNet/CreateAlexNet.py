@@ -1,24 +1,6 @@
-import math
-import sys
-import select
-import tty
-import termios
-import time
 import theano
-import pprint
 import theano.tensor as T
-import cPickle
-import numpy as np
-import scipy.io as sio
 from theano.tensor.shared_randomstreams import RandomStreams
-import cPickle
-import pprint
-import copy
-import scipy.stats as st
-
-import sys 
-sys.setrecursionlimit(50000) 
-
 
 from DeepLearningStack import DeepNet
 
