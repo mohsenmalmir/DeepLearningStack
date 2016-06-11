@@ -12,29 +12,29 @@ from theano.tensor.shared_randomstreams import RandomStreams
 
 import xml.etree.ElementTree as ET
 
-from ../Input/Img                   import Img
-from ../Input/Data                  import Data
-from ../ConvNet/Conv                import Conv
+from ..Input.Img                    import Img
+from ..Input.Data                   import Data
+from ..ConvNet.Conv                 import Conv
 from Flatten                        import Flatten
-from ../ConvNet/LRN                 import LRN
+from ..ConvNet.LRN                  import LRN
 from LU                             import LU
-from ../ConvNet/Pool                import Pool
+from ..ConvNet.Pool                 import Pool
 from Rectifier                      import Rectifier
 from Softmax                        import Softmax
-from ../ConvNet/Normalize           import Normalize
+from ..ConvNet.Normalize            import Normalize
 from Dropout                        import Dropout
-from ../RL/ActionSelection          import ActionSelection
+from ..RL.ActionSelection           import ActionSelection
 from Concatenate                    import Concatenate
 from Sigmoid                        import Sigmoid
 from Tanh                           import Tanh
-from ../RL/NaiveBayesBeliefUpdate   import NaiveBayesBeliefUpdate
-from ../ConvNet/DepthConcat			import DepthConcat
-from ../RL/DirichletLayer           import DirichletLayer
-from ../Mem/LSTM                    import LSTM 
-from ../ConvNet/BatchNormalize      import BatchNormalize
+from ..RL.NaiveBayesBeliefUpdate    import NaiveBayesBeliefUpdate
+from ..ConvNet.DepthConcat			import DepthConcat
+from ..RL.DirichletLayer            import DirichletLayer
+from ..Mem.LSTM                     import LSTM 
+from ..ConvNet.BatchNormalize       import BatchNormalize
 from ElementWise                    import ElementWise
-from ../RL/Gaussian                 import Gaussian
-from ../RL/GaussianObs              import GaussianObs
+from ..RL.Gaussian                  import Gaussian
+from ..RL.GaussianObs               import GaussianObs
 
 #maps type names into classes
 type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU,"Pool":Pool,
