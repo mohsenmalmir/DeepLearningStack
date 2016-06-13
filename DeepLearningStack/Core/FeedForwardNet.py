@@ -94,6 +94,7 @@ class FeedForwardNet(object):
                     continue
                 if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer","ElementWise","GaussianObs"]:
                     #check for all inputs
+                    print ("creating layer:",layer_name, "with multiple inputs: ")
                     inputs           = layer.findall("input")
                     inputs_text      = [inp.text for inp in inputs]
                     input_satiesfied = [inp.text in self.supplied_inputs.keys() for inp in inputs]
