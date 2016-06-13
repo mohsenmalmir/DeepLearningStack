@@ -1,3 +1,4 @@
+from __future__ import print
 import os
 import sys
 import time

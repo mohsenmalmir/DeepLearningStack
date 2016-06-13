@@ -1,3 +1,4 @@
+from __future__ import print
 import os
 import sys
 import time
@@ -6,7 +7,6 @@ import numpy as np
 
 import theano
 import theano.tensor as T
-from __future__ import print
 
 
 # implementing softmax operation
