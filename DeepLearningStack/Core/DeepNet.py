@@ -119,7 +119,7 @@ class DeepNet(object):
                 elif layer_input not in self.supplied_inputs.keys():
                     continue
                 else:
-                    print "creating layer:",layer_name, "with input: ",layer_input
+                    print ("creating layer:",layer_name, "with input: ",layer_input)
                     #create the layer, add it to self.layers
                     #each layer is initialized by its definition from xml, its input variable, the dimensions of its input and rs
                     #if cloning, then initialize this layer from the clone
@@ -140,7 +140,7 @@ class DeepNet(object):
                     layers_def.remove(layer)
             if len(layers_def)==0:
                 netbuilt = True
-        print "network built!"
+        print ("network built!")
 
 
 
