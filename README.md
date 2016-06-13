@@ -14,3 +14,6 @@ Alternatively, you can use pip:
 ```
 pip install DeepLearningStack
 ```
+
+#Tutorials
+AlexNet shows how to create a simple convnet.
