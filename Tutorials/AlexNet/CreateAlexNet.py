@@ -3,6 +3,7 @@ import theano.tensor as T
 from theano.tensor.shared_randomstreams import RandomStreams
 import sys
 sys.path.append("../../")
+import time
 
 import DeepLearningStack
 
