@@ -6,6 +6,7 @@ import sys
 import time
 import numpy as np
 
+sys.path.append("../../")
 import DeepLearningStack
 from DeepLearningStack import FeedForwardNet
 
