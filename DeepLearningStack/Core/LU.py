@@ -36,8 +36,6 @@ class LU(object):
         rng             = np.random.RandomState(seed=int(time.time()))
         self.input      = input
         n_in,batch_size = input_shape
-        print(n_in)
-        print(numUnits)
         # initialize weights with random weights
         if clone_from!=None:
             self.W   = clone_from.W
