@@ -63,3 +63,7 @@ target/
 
 # VIM swap files
 *.swp
+
+
+#PYPI RC file
+.pypirc
