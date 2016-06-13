@@ -7,7 +7,7 @@ A library for deep learning in Thenao. It allows easy definition of deep network
 #Installation
 Download the package, cd into the directory and type:
 ```
-python setup.py install
+sudo python setup.py install
 ```
 
 Alternatively, you can use pip:
