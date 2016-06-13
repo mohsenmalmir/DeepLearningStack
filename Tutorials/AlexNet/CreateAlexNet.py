@@ -2,7 +2,7 @@ import theano
 import theano.tensor as T
 from theano.tensor.shared_randomstreams import RandomStreams
 
-from DeepLearningStack import DeepNet
+import DeepLearningStack
 
 
 
@@ -18,6 +18,6 @@ if __name__=="__main__":
     images            = T.tensor4("images")
 
     #create the graph structure
-    net1              = DeepNet(rng,{"image1":images}, config)
+    net1              = FeedForwardNet.FeedForwardNet(rng,{"image1":images}, config)
                                         
 

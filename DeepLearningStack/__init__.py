@@ -1,1 +1,1 @@
-from .Core import DeepNet
+from .Core import FeedForwardNet 

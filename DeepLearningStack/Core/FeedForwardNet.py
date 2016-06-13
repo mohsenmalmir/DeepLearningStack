@@ -31,7 +31,6 @@ from .Tanh                          import Tanh
 from ..RL.NaiveBayesBeliefUpdate    import NaiveBayesBeliefUpdate
 from ..ConvNet.DepthConcat			import DepthConcat
 from ..RL.DirichletLayer            import DirichletLayer
-from ..Mem.LSTM                     import LSTM 
 from ..ConvNet.BatchNormalize       import BatchNormalize
 from .ElementWise                   import ElementWise
 from ..RL.Gaussian                  import Gaussian
@@ -45,13 +44,13 @@ type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU
                     "NaiveBayesBeliefUpdate":NaiveBayesBeliefUpdate,
 					"DepthConcat":DepthConcat,
                     "DirichletLayer":DirichletLayer,
-                    "LSTM":LSTM, "BatchNormalize":BatchNormalize,
+                    "BatchNormalize":BatchNormalize,
                     "ElementWise":ElementWise,
                     "Gaussian":Gaussian,
                     "GaussianObs":GaussianObs,
                   }
 # Stack of ReLU followed by LU
-class DeepNet(object):
+class FeedForwardNet(object):
 
     def __init__(self, rng, input, configFile, clone_from=None):
         """Initialize the parameters for the Deep Net
@@ -93,7 +92,7 @@ class DeepNet(object):
                 #if a layer's params are tied to another layer, make sure the first layer is already created
                 if tie_from != None and tie_from not in self.name2layer.keys():
                     continue
-                if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer","LSTM","ElementWise","GaussianObs"]:
+                if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer","ElementWise","GaussianObs"]:
                     #check for all inputs
                     inputs           = layer.findall("input")
                     inputs_text      = [inp.text for inp in inputs]
