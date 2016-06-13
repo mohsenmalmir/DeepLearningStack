@@ -23,6 +23,7 @@ setup(
     description='A Python package for creating deep network graphs using Theano',
     long_description=long_description,
     url='https://github.com/mohsenmalmir/DeepLearningStack',
+    download_url='https://github.com/mohsenmalmir/DeepLearningStack/tarball/1.0.0'
     # Author details
     author='Mohsen Malmir',
     author_email='mmalmir@ucsd.edu',
