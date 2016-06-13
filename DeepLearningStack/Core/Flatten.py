@@ -40,7 +40,7 @@ class Flatten(object):
             """
         self.input         = input
         batch_size         = input_shape[-1]#c01b
-        self.output        = T.reshape(input,[np.prod(input_shape[:-1]),batch_size])
+        self.output        = T.reshape(input,[np.prod(input_shape[:-1]).astype(np.int32),batch_size])
         self.input_shape   = input_shape
         self.output_shape  = [np.prod(input_shape[:-1]),batch_size]
         self.params        = []
