@@ -22,6 +22,6 @@ if __name__=="__main__":
     images            = T.tensor4("images")
 
     #create the graph structure
-    net1              = FeedForwardNet.FeedForwardNet(rng,{"image1":images}, config)
+    net1              = FeedForwardNet.FeedForwardNet(rng,{"input":images}, config)
                                         
 
