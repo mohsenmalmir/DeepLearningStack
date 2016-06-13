@@ -12,6 +12,7 @@ from codecs import open
 from os import path
 
 here = path.abspath(path.dirname(__file__))
+version = '0.0.3'
 
 # Get the long description from the README file
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
@@ -19,11 +20,11 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='DeepLearningStack',
-    version='0.0.2',
+    version=version,
     description='A Python package for creating deep network graphs using Theano',
     long_description=long_description,
     url='https://github.com/mohsenmalmir/DeepLearningStack',
-    download_url='https://github.com/mohsenmalmir/DeepLearningStack/tarball/0.0.2',
+    download_url='https://github.com/mohsenmalmir/DeepLearningStack/tarball/'+version,
     # Author details
     author='Mohsen Malmir',
     author_email='mmalmir@ucsd.edu',
