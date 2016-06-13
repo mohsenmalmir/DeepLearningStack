@@ -19,11 +19,11 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='DeepLearningStack',
-    version='1.0.0',
+    version='0.0.2',
     description='A Python package for creating deep network graphs using Theano',
     long_description=long_description,
     url='https://github.com/mohsenmalmir/DeepLearningStack',
-    download_url='https://github.com/mohsenmalmir/DeepLearningStack/tarball/0.0.1',
+    download_url='https://github.com/mohsenmalmir/DeepLearningStack/tarball/0.0.2',
     # Author details
     author='Mohsen Malmir',
     author_email='mmalmir@ucsd.edu',
