@@ -227,7 +227,7 @@
         <CloneCoeff>1.</CloneCoeff>
         <bias>0.0</bias>
     </layer>
-    <layer type="Softmax" name="softmax1">
+    <layer type="Softmax" name="softmax">
         <input>fc3</input>
     </layer>
 </data>
