@@ -7,7 +7,6 @@ import numpy as np
 import theano
 import theano.tensor as T
 from theano.sandbox.cuda.basic_ops import gpu_contiguous
-import cPickle
 
 
 # implementing Gaussian layer
@@ -40,16 +39,6 @@ class Gaussian(object):
             self.mu     = clone_from.mu
             self.cov    = clone_from.cov
         else:
-            #f = open("aa.pickle","rb")
-            #d = cPickle.load(f)
-            #f.close()
-            #W_values = np.mean(d,axis=1).reshape([-1,1])+np.asarray(rng.normal(loc=0., scale=0.05, size=(n_in, numUnits)), dtype=theano.config.floatX)
-            #b_values = np.std(d,axis=1).reshape([-1,1]) 
-            #b_values = b_values * b_values 
-            #b_values[np.where(b_values == 0)] = 1.
-            #b_values = np.tile(b_values , [1,numUnits]) 
-            
-            
             W_bound  = .1#numpy.sqrt(6. / (n_in + n_out))
             W_values = np.asarray(rng.normal(loc=0., scale=W_bound, size=(n_in, numUnits)), dtype=theano.config.floatX)
             self.mu  = theano.shared(value=W_values, name='mu', borrow=True)

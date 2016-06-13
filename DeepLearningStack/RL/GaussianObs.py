@@ -7,7 +7,6 @@ import numpy as np
 import theano
 import theano.tensor as T
 from theano.sandbox.cuda.basic_ops import gpu_contiguous
-import cPickle
 
 
 # implementing Gaussian observation layer
