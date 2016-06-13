@@ -6,6 +6,7 @@ import numpy as np
 
 import theano
 import theano.tensor as T
+from __future__ import print
 
 
 # implementing rectification operation
@@ -37,7 +38,6 @@ class Dropout(object):
     def init(self,input, input_shape, P,rs):
         self.input        = input
         self.drop         = rs.binomial(input_shape,p=P).astype(theano.config.floatX)
-        print type(self.drop)
         self.output       = self.drop * input
         self.input_shape  = input_shape
         self.output_shape = input_shape

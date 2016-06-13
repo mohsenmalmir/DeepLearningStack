@@ -6,6 +6,7 @@ import numpy as np
 
 import theano
 import theano.tensor as T
+from __future__ import print
 
 
 # implementing softmax operation
@@ -40,7 +41,7 @@ class ActionSelection(object):
             selectedActs  = T.ge(self.cumsum,self.rndunif).astype(theano.config.floatX)
             actions       = T.argmax(selectedActs,axis=0)
         else:
-            print "invalid action-selection type"
+            print ("invalid action-selection type")
             raise
         self.output       = actions.reshape([1,batch_sz])
         self.params       = []
