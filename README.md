@@ -16,4 +16,4 @@ pip install DeepLearningStack
 ```
 
 #Tutorials
-AlexNet shows how to create a simple convnet.
+AlexNet shows how to create a simple convnet. Navigate into *Tutorials/AlexNet/*, this folder contains *AlexNet.xml* which is the definition of the deep net. Different layers are defined and connected to each to form the computation graph of the network.
