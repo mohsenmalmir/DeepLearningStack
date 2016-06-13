@@ -6,6 +6,7 @@ sys.path.append("../../")
 import time
 
 import DeepLearningStack
+from DeepLearningStack import FeedForwardNet
 
 
 
