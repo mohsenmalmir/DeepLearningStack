@@ -218,8 +218,6 @@ for exp_num in range(20):
     for epoch in range(n_epochs):
         print("-----------------------------------------------")
         print("Epoch:",epoch)
-        lr               = 0.01#initial learning rate
-        lr_dec_step      = 5000#learning rate decrease step
         costs            = []
         val_costs        = []
         test_costs       = []
