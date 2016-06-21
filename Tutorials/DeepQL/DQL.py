@@ -8,7 +8,7 @@ import theano
 import pprint
 import theano.tensor as T
 #import cv2
-import cPickle
+import pickle
 import copy
 import numpy as np
 import scipy.io as sio
@@ -406,5 +406,5 @@ plt.show()
 
 print("saving experiment results...")
 f = open("expresults-"+arm+"-"+str(n_test_moves)+".pickle","wb")
-cPickle.dump(experiment_data,f,protocol=cPickle.HIGHEST_PROTOCOL)
+pickle.dump(experiment_data,f,protocol=pickle.HIGHEST_PROTOCOL)
 f.close()
