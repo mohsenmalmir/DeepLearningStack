@@ -217,6 +217,7 @@ for exp_num in range(20):
     print("DQL strategy")
     print("training network...")
     for epoch in range(n_epochs):
+        print("-----------------------------------------------")
         print("Epoch:",epoch)
         costs           = []
         val_costs       = []
