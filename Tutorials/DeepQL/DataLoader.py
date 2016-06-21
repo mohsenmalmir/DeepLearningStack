@@ -52,7 +52,7 @@ class DataLoader(object):
                 self.t = np.concantenate(ts)
                 self.p = np.concantenate(ps)
             else:
-                f = file(list_of_files[0], "rb")
+                f = open(list_of_files[0], "rb")
                 self.x,self.p,self.y,self.t,self.obj2label = pickle.load(f)
                 f.close()
             print( "data size:",self.x.shape)
