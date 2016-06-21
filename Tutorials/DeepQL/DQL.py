@@ -98,7 +98,7 @@ print("number of tracks:",np.unique(test_data.t).shape[0])
 experiment_data = dict()
 #train 20 different models, report the mean average
 
-for exp_num in range(20):
+for exp_num in range(2):
     
     test_data.shuffle_data()
     
