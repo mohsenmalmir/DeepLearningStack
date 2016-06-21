@@ -225,7 +225,7 @@ for exp_num in range(20):
         test_data.reset_minibatch_counter()
         test_move_hist   = np.zeros([num_actions,],dtype=np.int32)
         
-        for i in range(train_data.x.shape[0] / batch_size + 1):
+        for i in range(int(train_data.x.shape[0] / batch_size )+ 1):
             if i is 0:
                 print("iteration:",iter_cnt)
             alpha          = max(0.00, 1. - iter_cnt / 20000.)#1. / iter_cnt
@@ -319,7 +319,7 @@ for exp_num in range(20):
         corrects           = np.zeros([n_test_moves,batch_size])
         test_data.reset_minibatch_counter()
         test_move_hist     = np.zeros([num_actions,],dtype=np.int32)
-        for i in range(test_data.x.shape[0] / batch_size + 1):
+        for i in range(int(test_data.x.shape[0] / batch_size ) + 1):
             x,y,p,t,rng    = test_data.get_next_minibatch()
             test_poses_hist.append(p)
             beliefs        = x.copy()
