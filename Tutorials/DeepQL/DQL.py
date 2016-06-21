@@ -403,7 +403,7 @@ i += 1
 plt.xticks(range(n_test_moves+1))
 
 plt.figure(2)
-i=2
+i=0
 plt.plot(np.log(experiment_data[i]["train_RMSE"]),c='b')
 plt.hold(True)
 plt.plot(np.log(experiment_data[i]["val_RMSE"]),c='r')
