@@ -37,24 +37,12 @@ class DataLoader(object):
             assert(False)
         elif file_format=="pkl":
             print( "loading pickled data")
-            if len(list_of_files)>1:
-                xs,ps,ys,ts = [],[],[],[]
-                for fname in list_of_files:
-                    f = file(fname, "rb")
-                    x,p,y,t,self.obj2label = pickle.load(f)
-                    f.close()
-                    xs.append(x)
-                    ys.append(y)
-                    ts.append(t)
-                    ps.append(p)
-                self.x = np.concantenate(xs)
-                self.y = np.concantenate(ys)
-                self.t = np.concantenate(ts)
-                self.p = np.concantenate(ps)
-            else:
-                f = open(list_of_files[0], "rb")
+            f = open(list_of_files[0], "rb")
+            if(sys.version_info[:2] <= (2,7)):
                 self.x,self.p,self.y,self.t,self.obj2label = pickle.load(f)
-                f.close()
+            else:#for versions 3 and higher, use encoding
+                self.x,self.p,self.y,self.t,self.obj2label = pickle.load(f,encoding='bytes')
+            f.close()
             print( "data size:",self.x.shape)
             print( "target shape:",self.y.shape)
             print( "number of target classes:",np.unique(self.y).shape)
