@@ -67,8 +67,8 @@ print("number of classes:",C)
 print("number of tracks:",np.unique(train_data.t).shape[0])
 
 
-print("##################################################"
-print("loading validation data"
+print("##################################################")
+print("loading validation data")
 data_files = ["val-"+arm+".pickle"]
 val_data   = DataLoader(data_files,"pkl",minibatch_size=batch_size)
 val_data.shuffle_data()
@@ -80,8 +80,8 @@ print("number of tracks:",np.unique(val_data.t).shape[0])
 
 
 
-print("##################################################"
-print("loading test data"
+print("##################################################")
+print("loading test data")
 data_files = ["test-"+arm+".pickle"]
 test_data  = DataLoader(data_files,"pkl",minibatch_size=batch_size)
 test_data.adapt_labels(train_data.obj2label)#data are already unified in their labels
