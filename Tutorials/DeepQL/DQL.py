@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 import select
 import tty
@@ -54,40 +55,40 @@ D          = 136#number of classes
 
 arm = "left"
 #load the data
-print "##################################################"
-print "loading train data"
+print ("##################################################")
+print ("loading train data")
 data_files = ["train-"+arm+".pickle"]
 train_data = DataLoader(data_files,"pkl",minibatch_size=batch_size)
 train_data.shuffle_data()
 C = np.unique(train_data.y).shape[0]
 #print (train_data.y == np.argmax(train_data.x,axis=1)).mean()
-print "data size:",train_data.x.shape
-print "number of classes:",C
-print "number of tracks:",np.unique(train_data.t).shape[0]
+print ("data size:",train_data.x.shape)
+print ("number of classes:",C)
+print ("number of tracks:",np.unique(train_data.t).shape[0])
 
 
-print "##################################################"
-print "loading validation data"
+print ("##################################################"
+print ("loading validation data"
 data_files = ["val-"+arm+".pickle"]
 val_data   = DataLoader(data_files,"pkl",minibatch_size=batch_size)
 val_data.shuffle_data()
 C = np.unique(val_data.y).shape[0]
 val_data.adapt_labels(train_data.obj2label)#data are already unified in their labels
-print "data size:",val_data.x.shape
-print "number of classes:",C
-print "number of tracks:",np.unique(val_data.t).shape[0]
+print ("data size:",val_data.x.shape)
+print ("number of classes:",C)
+print ("number of tracks:",np.unique(val_data.t).shape[0])
 
 
 
-print "##################################################"
-print "loading test data"
+print ("##################################################"
+print ("loading test data"
 data_files = ["test-"+arm+".pickle"]
 test_data  = DataLoader(data_files,"pkl",minibatch_size=batch_size)
 test_data.adapt_labels(train_data.obj2label)#data are already unified in their labels
 test_data.shuffle_data()
-print "data size:",test_data.x.shape
-print "number of classes:",np.unique(test_data.y).shape[0]
-print "number of tracks:",np.unique(test_data.t).shape[0]
+print ("data size:",test_data.x.shape)
+print ("number of classes:",np.unique(test_data.y).shape[0])
+print ("number of tracks:",np.unique(test_data.t).shape[0])
 
 
 
@@ -101,9 +102,9 @@ for exp_num in range(20):
     
     test_data.shuffle_data()
     
-    print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-    print "EXPERIMENT ", exp_num
-    print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    print( "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    print( "EXPERIMENT ", exp_num)
+    print( "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     experiment_data[exp_num] = dict()
 
     lr          = 0.01#initial learning rate
@@ -122,8 +123,8 @@ for exp_num in range(20):
 
 
     #create deep net
-    print "##################################################"
-    print "Creating deep net..."
+    print ("##################################################")
+    print ("Creating deep net...")
     input      = T.matrix("data",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
     config     = "DQLArch.xml"
     rng        = RandomStreams(seed=int(time.time()))
@@ -131,8 +132,8 @@ for exp_num in range(20):
     test_net   = FeedForwardNet.FeedForwardNet(rng,input,config,clone_from=train_net)
     pprint.pprint(train_net.output_dims)
 
-    print "##################################################"
-    print "creating cost layer..."
+    print ("##################################################")
+    print ("creating cost layer...")
     input_shared          = theano.shared(np.zeros([D,batch_size],dtype=theano.config.floatX),borrow=True)
     rot_target_shared     = theano.shared(np.zeros([batch_size,],dtype=theano.config.floatX),borrow=True)
     rot_index_shared      = theano.shared(np.zeros([batch_size,],dtype=np.int32),borrow=True)
@@ -165,8 +166,8 @@ for exp_num in range(20):
                                                 },
                                             )
 
-    print "##################################################"
-    print "classifying tracks tracks"
+    print ("##################################################")
+    print ("classifying tracks tracks")
     track_indices  = dict()
     for t in np.unique(test_data.t):
         idx        = np.where(test_data.t == t)[0]
@@ -185,7 +186,7 @@ for exp_num in range(20):
             belief   = belief / belief.sum()
             lbl      = np.argmax(belief)
             accuracy[i] += lbl == test_data.y[next_idx]
-    print "test-sequential",accuracy / np.unique(test_data.t).shape[0]
+    print ("test-sequential",accuracy / np.unique(test_data.t).shape[0])
     seq_acc = accuracy / np.unique(test_data.t).shape[0]
     experiment_data[exp_num]["test_seq_acc"] = seq_acc
 
@@ -205,17 +206,17 @@ for exp_num in range(20):
             x,y,p,t,_      = test_data.get_data_for_pose(t,p + tgt)#get the data for the proposed set of rotations
             beliefs        = beliefs * x
             beliefs        = beliefs / beliefs.sum(axis=1).reshape([-1,1])
-    print "test-random:",corrects.sum(axis=1) / float(test_data.x.shape[0])
+    print ("test-random:",corrects.sum(axis=1) / float(test_data.x.shape[0]))
     rnd_acc = corrects.sum(axis=1) / float(test_data.x.shape[0])
     experiment_data[exp_num]["test_rnd_acc"] = rnd_acc
 
-    print "##################################################"
-    print "training network..."
+    print ("##################################################")
+    print ("training network...")
     test_accuracies = []
     costs           = []
     test_costs      = []
     for epoch in range(n_epochs):
-        print epoch
+        print ("Epoch:",epoch)
         train_data.reset_minibatch_counter()
         corrects         = np.zeros([n_moves,batch_size])
         move_hist        = np.zeros([num_actions,],dtype=np.int32)
@@ -226,7 +227,7 @@ for exp_num in range(20):
         
         for i in range(train_data.x.shape[0] / batch_size + 1):
             if i is 0:
-                print iter_cnt
+                print ("iteration:",iter_cnt)
             alpha          = max(0.00, 1. - iter_cnt / 20000.)#1. / iter_cnt
             x,y,p,t,rng    = train_data.get_next_minibatch()
             poses_hist.append(p)
@@ -237,7 +238,6 @@ for exp_num in range(20):
 #                lr      = max(1.e-7, 0.01 * (1. - iter_cnt / 16000.) )
                 if iter_cnt>=lr_dec_start and iter_cnt%lr_dec_step==lr_dec_step-1:
                     lr = max(1.e-10,lr * 0.1)
-                    print "***",lr
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
                 rot,prot,_     = fnx_action_selection()
                 rot            = rot.reshape(-1)
@@ -266,12 +266,10 @@ for exp_num in range(20):
                 pred_rslt      = np.argmax(x1,axis=1)#x1 should be 'beliefs' if we use Q = r(t) + gamma max_a Q(s,a').
                 prot_max       = gamma * np.max(prot1,axis=0).reshape(-1).astype(theano.config.floatX)
                 #reward each move based on the amount of belief increase
-#                print beliefs.shape
                 srtd_beliefs   = np.sort(x1,axis=1)#x1 should be 'beliefs' if we use Q = r(t) + gamma max_a Q(s,a').
-#                print (pred_rslt==y1)* (srtd_beliefs[:,-1] - srtd_beliefs[:,-2]).reshape(-1)
-        	#if mv == n_moves-1:
-                prot_max      += R * (pred_rslt==y1)* (srtd_beliefs[:,-1] - srtd_beliefs[:,-2]).reshape(-1)
-                prot_max      -= R * (pred_rslt!=y1)
+        	    if mv == n_moves-1:
+                    prot_max      += R * (pred_rslt==y1)* (srtd_beliefs[:,-1] - srtd_beliefs[:,-2]).reshape(-1)
+                    prot_max      -= R * (pred_rslt!=y1)
                 prot_max       = alpha * prot_max + (1-alpha) * prot[rot_idx,range(batch_size)].reshape(-1)
                 corrects[mv,:] += (pred_rslt==y)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
@@ -311,13 +309,9 @@ for exp_num in range(20):
                 beliefs        = beliefs * x
                 beliefs        = beliefs / beliefs.sum(axis=1).reshape([-1,1])
 
-        print np.sum(costs)
-        pprint.pprint(move_hist)
-        print "train:",corrects.sum(axis=1) / float(train_data.x.shape[0])
-        print lr,epsilon
-#        plt.figure(1)
-#        plt.hist(np.concatenate(poses_hist),bins=100)
-#        plt.show()
+        print ("epoch cost:",np.sum(costs))
+        print ("train accuracy:",corrects.sum(axis=1) / float(train_data.x.shape[0]))
+        print ("learning rate:",lr," RL epsilon:",epsilon)
 
 
 
@@ -353,16 +347,9 @@ for exp_num in range(20):
                 beliefs        = beliefs * x
                 beliefs        = beliefs / beliefs.sum(axis=1).reshape([-1,1])
             hst            = np.histogram(move_hist.reshape(-1),bins=range(0,num_actions))[0]
-            #pprint.pprint(hst)
-        #    print "test:",corrects / float(test_data.x.shape[0])
         pprint.pprint(test_move_hist)
         print "test:",corrects.sum(axis=1) / float(test_data.x.shape[0])
         test_accuracies.append(corrects.sum(axis=1) / float(test_data.x.shape[0]))
-#        plt.figure(2)
-#        plt.hist(np.concatenate(test_poses_hist),bins=100)
-#        plt.show()
-    #    print "test:",test_corrects.sum(axis=1) / float(test_data.x.shape[0])
-    #    test_accuracies.append(test_corrects.sum(axis=1) / float(test_data.x.shape[0]))
 
     experiment_data[exp_num]["test_dpq_acc"] = corrects.sum(axis=1) / float(test_data.x.shape[0])
     experiment_data[exp_num]["test_RMSE"]    = test_costs
@@ -417,16 +404,8 @@ plt.plot(np.log(experiment_data[i]["test_RMSE"]),c='r')
 
 plt.show()
 
-#print test_costs
-#plt.figure(2)
-#plt.plot(np.log(test_costs),'b')
-#plt.hold(True)
-#plt.plot(np.log(costs),'r')
-#plt.xlabel("iteration")
-#plt.ylabel("RMSE")
-#plt.show()
 
-print "saving..."
-f = open("expresults-"+cat+"-"+arm+"-"+str(n_test_moves)+".pickle","wb")
+print ("saving experiment results...")
+f = open("expresults-"+arm+"-"+str(n_test_moves)+".pickle","wb")
 cPickle.dump(experiment_data,f,protocol=cPickle.HIGHEST_PROTOCOL)
 f.close()

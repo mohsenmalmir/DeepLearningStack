@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 import sys
 import time
@@ -32,10 +33,10 @@ class DataLoader(object):
         
     def load_data(self,list_of_files,file_format):
         if file_format=="mat":
-            print "not implemented!"
+            print( "not implemented!")
             assert(False)
         elif file_format=="pkl":
-            print "loading pickled data"
+            print( "loading pickled data")
             if len(list_of_files)>1:
                 xs,ps,ys,ts = [],[],[],[]
                 for fname in list_of_files:
@@ -54,15 +55,15 @@ class DataLoader(object):
                 f = file(list_of_files[0], "rb")
                 self.x,self.p,self.y,self.t,self.obj2label = cPickle.load(f)#( (), f, protocol=cPickle.HIGHEST_PROTOCOL)
                 f.close()
-            print "data size:",self.x.shape
-            print "target shape:",self.y.shape
-            print "number of target classes:",np.unique(self.y).shape
-            print "number of tracks:",np.unique(self.t).shape[0]
+            print( "data size:",self.x.shape)
+            print( "target shape:",self.y.shape)
+            print( "number of target classes:",np.unique(self.y).shape)
+            print( "number of tracks:",np.unique(self.t).shape[0])
             assert(self.y.shape[0]==self.x.shape[0])
             assert(self.y.shape[0]==self.t.shape[0])
             assert(self.y.shape[0]==self.p.shape[0])
         else:
-            print "wrong file format!"
+            print ("wrong file format!")
             assert(False)
         self.update_tracks_record()#keep track of where different tracks are
 
@@ -147,7 +148,6 @@ class DataLoader(object):
 
             diff     = np.abs(pose - p)
             closest  = np.argmin(diff)#find the data with the smallest distance
-#            print idx
             indices.append(idx[closest])
         return (self.x[indices],self.y[indices],self.p[indices],self.t[indices],indices)
 
