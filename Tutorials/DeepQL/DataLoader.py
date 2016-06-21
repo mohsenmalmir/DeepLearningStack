@@ -63,7 +63,7 @@ class DataLoader(object):
             assert(self.y.shape[0]==self.t.shape[0])
             assert(self.y.shape[0]==self.p.shape[0])
         else:
-            print ("wrong file format!")
+            print("wrong file format!")
             assert(False)
         self.update_tracks_record()#keep track of where different tracks are
 
