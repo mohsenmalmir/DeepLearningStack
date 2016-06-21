@@ -104,7 +104,6 @@ for exp_num in range(20):
     
     print( "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     print( "EXPERIMENT ", exp_num)
-    print( "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
     experiment_data[exp_num] = dict()
 
     lr          = 0.01#initial learning rate
@@ -167,7 +166,7 @@ for exp_num in range(20):
                                             )
 
     print("##################################################")
-    print("classifying tracks tracks")
+    print("sequential strategy")
     track_indices  = dict()
     for t in np.unique(test_data.t):
         idx        = np.where(test_data.t == t)[0]
@@ -189,8 +188,11 @@ for exp_num in range(20):
     print("test-sequential",accuracy / np.unique(test_data.t).shape[0])
     seq_acc = accuracy / np.unique(test_data.t).shape[0]
     experiment_data[exp_num]["test_seq_acc"] = seq_acc
+    print("##################################################")
 
 
+    print("##################################################")
+    print("random strategy")
     test_data.reset_minibatch_counter()
     corrects    = np.zeros([n_test_moves,batch_size])
     for i in range(int(test_data.x.shape[0] / batch_size) + 1):
@@ -209,12 +211,13 @@ for exp_num in range(20):
     print("test-random:",corrects.sum(axis=1) / float(test_data.x.shape[0]))
     rnd_acc = corrects.sum(axis=1) / float(test_data.x.shape[0])
     experiment_data[exp_num]["test_rnd_acc"] = rnd_acc
+    print("##################################################")
 
     print("##################################################")
+    print("DQL strategy")
     print("training network...")
-    test_accuracies = []
     costs           = []
-    test_costs      = []
+    val_costs       = []
     for epoch in range(n_epochs):
         print("Epoch:",epoch)
         train_data.reset_minibatch_counter()
@@ -234,7 +237,7 @@ for exp_num in range(20):
             beliefs        = x.copy()
             for mv in range(n_moves):
                 iter_cnt      += 1
-                epsilon = max(0.00, 1.0 - iter_cnt / 800.)
+                epsilon = max(0.00, 1.0 - iter_cnt / 20000.)
                 if iter_cnt>=lr_dec_start and iter_cnt%lr_dec_step==lr_dec_step-1:
                     lr = max(1.e-10,lr * 0.1)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
@@ -282,8 +285,9 @@ for exp_num in range(20):
                 beliefs         = beliefs / beliefs.sum(axis=1).reshape([-1,1])
 
 
+            #validation accuracy 
 
-            x,y,p,t,rng    = test_data.get_next_minibatch()
+            x,y,p,t,rng    = val_data.get_next_minibatch()
             beliefs        = x.copy()
             prev_actval    = np.zeros([batch_size,]).reshape(-1)
             for mv in range(n_moves+1):
@@ -294,7 +298,7 @@ for exp_num in range(20):
                 rot            = (1-rand_mask) * rot + rand_mask * rand_acts
                 if mv>0:
                     c          = np.sqrt(np.mean((prot.max(axis=0).reshape(-1) - prev_actval)**2))
-                    test_costs.append(c)
+                    val_costs.append(c)
                 prev_actval    = prot[rot,range(batch_size)].reshape(-1)
                 rot_idx        = rot.copy().astype(np.int32)
                 for kk in range(rot_idx.shape[1]):
@@ -304,7 +308,7 @@ for exp_num in range(20):
 
                 pred_rslt      = np.argmax(beliefs,axis=1)
     #            test_corrects[mv,:]+= (pred_rslt==y)
-                x,y,p,t,_      = test_data.get_data_for_pose(t,p + tgt)#get the data for the proposed set of rotations
+                x,y,p,t,_      = val_data.get_data_for_pose(t,p + tgt)#get the data for the proposed set of rotations
                 beliefs        = beliefs * x
                 beliefs        = beliefs / beliefs.sum(axis=1).reshape([-1,1])
 
@@ -314,6 +318,7 @@ for exp_num in range(20):
 
 
 
+        test_accuracies = []
         test_poses_hist    = []
         corrects           = np.zeros([n_test_moves,batch_size])
         test_data.reset_minibatch_counter()
@@ -348,6 +353,7 @@ for exp_num in range(20):
             hst            = np.histogram(move_hist.reshape(-1),bins=range(0,num_actions))[0]
         print("test:",corrects.sum(axis=1) / float(test_data.x.shape[0]))
         test_accuracies.append(corrects.sum(axis=1) / float(test_data.x.shape[0]))
+    print("##################################################")
 
     experiment_data[exp_num]["test_dpq_acc"] = corrects.sum(axis=1) / float(test_data.x.shape[0])
     experiment_data[exp_num]["test_RMSE"]    = test_costs
@@ -356,6 +362,7 @@ for exp_num in range(20):
     experiment_data[exp_num]["test_net"]     = test_net
     experiment_data[exp_num]["train_poses_hist"]     = poses_hist
     experiment_data[exp_num]["test_poses_hist"]     = test_poses_hist
+    print( "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 
 
 colors    = ["r","g","b","c","y","m","k"]
