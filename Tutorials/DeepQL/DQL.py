@@ -216,10 +216,10 @@ for exp_num in range(20):
     print("##################################################")
     print("DQL strategy")
     print("training network...")
-    costs           = []
-    val_costs       = []
     for epoch in range(n_epochs):
         print("Epoch:",epoch)
+        costs           = []
+        val_costs       = []
         train_data.reset_minibatch_counter()
         corrects         = np.zeros([n_moves,batch_size])
         move_hist        = np.zeros([num_actions,],dtype=np.int32)
@@ -313,6 +313,7 @@ for exp_num in range(20):
                 beliefs        = beliefs / beliefs.sum(axis=1).reshape([-1,1])
 
         print("epoch cost:",np.sum(costs))
+        print("validation cost:",np.sum(val_costs))
         print("train accuracy:",corrects.sum(axis=1) / float(train_data.x.shape[0]))
         print("learning rate:",lr," RL epsilon:",epsilon)
 
