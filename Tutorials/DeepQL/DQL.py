@@ -347,8 +347,7 @@ for exp_num in range(20):
                 beliefs        = beliefs * x
                 beliefs        = beliefs / beliefs.sum(axis=1).reshape([-1,1])
             hst            = np.histogram(move_hist.reshape(-1),bins=range(0,num_actions))[0]
-        pprint.pprint(test_move_hist)
-        print"test:",corrects.sum(axis=1) / float(test_data.x.shape[0])
+        print("test:",corrects.sum(axis=1) / float(test_data.x.shape[0]))
         test_accuracies.append(corrects.sum(axis=1) / float(test_data.x.shape[0]))
 
     experiment_data[exp_num]["test_dpq_acc"] = corrects.sum(axis=1) / float(test_data.x.shape[0])
