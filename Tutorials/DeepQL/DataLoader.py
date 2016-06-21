@@ -92,7 +92,7 @@ class DataLoader(object):
 
     def shuffle_data(self):
         #shuffle data
-        idx = range(self.x.shape[0])
+        idx = np.arange(self.x.shape[0])
         np.random.shuffle(idx)
         self.x = self.x[idx]
         self.y = self.y[idx]
