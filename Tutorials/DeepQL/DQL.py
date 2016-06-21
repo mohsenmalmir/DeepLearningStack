@@ -107,7 +107,7 @@ for exp_num in range(20):
     experiment_data[exp_num] = dict()
 
     lr          = 0.01#initial learning rate
-    lr_dec_step = 1000#learning rate decrease step
+    lr_dec_step = 5000#learning rate decrease step
     num_actions = 10#number of actions
     gamma       = 0.9#RL discount factor
     alpha       = 0.01#stochastic approximation coefficient
