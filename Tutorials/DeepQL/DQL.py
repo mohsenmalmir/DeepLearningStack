@@ -108,7 +108,6 @@ for exp_num in range(20):
 
     lr          = 0.01#initial learning rate
     lr_dec_step = 1000#learning rate decrease step
-    lr_dec_start= 0
     num_actions = 10#number of actions
     gamma       = 0.9#RL discount factor
     alpha       = 0.01#stochastic approximation coefficient
@@ -219,9 +218,11 @@ for exp_num in range(20):
     for epoch in range(n_epochs):
         print("-----------------------------------------------")
         print("Epoch:",epoch)
-        costs           = []
-        val_costs       = []
-        test_costs      = []
+        lr               = 0.01#initial learning rate
+        lr_dec_step      = 5000#learning rate decrease step
+        costs            = []
+        val_costs        = []
+        test_costs       = []
         train_data.reset_minibatch_counter()
         corrects         = np.zeros([n_moves,batch_size])
         move_hist        = np.zeros([num_actions,],dtype=np.int32)
@@ -240,7 +241,7 @@ for exp_num in range(20):
             for mv in range(n_moves):
                 iter_cnt      += 1
                 epsilon = max(0.00, 1.0 - iter_cnt / 20000.)
-                if iter_cnt>=lr_dec_start and iter_cnt%lr_dec_step==lr_dec_step-1:
+                if iter_cnt%lr_dec_step==lr_dec_step-1:
                     lr = max(1.e-10,lr * 0.1)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
                 rot,prot,_     = fnx_action_selection()
