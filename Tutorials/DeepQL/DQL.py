@@ -193,7 +193,7 @@ for exp_num in range(20):
 
     test_data.reset_minibatch_counter()
     corrects    = np.zeros([n_test_moves,batch_size])
-    for i in range(test_data.x.shape[0] / batch_size + 1):
+    for i in range(int(test_data.x.shape[0] / batch_size) + 1):
         x,y,p,t,rng    = test_data.get_next_minibatch()
         beliefs        = x.copy()
         for mv in range(n_test_moves):
