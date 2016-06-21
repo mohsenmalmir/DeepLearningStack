@@ -117,7 +117,7 @@ for exp_num in range(20):
     epsilon     = 1.#for e-greedy annealing
     iter_cnt    = 1
     epsilon_dec_step = 100
-    n_epochs    = 50
+    n_epochs    = 15 
 
 
     #create deep net
