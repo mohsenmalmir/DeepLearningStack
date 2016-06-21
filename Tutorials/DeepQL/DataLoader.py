@@ -2,7 +2,7 @@ from __future__ import print_function
 import os
 import sys
 import time
-import cPickle
+import pickle
 import numpy as np
 
 
@@ -41,7 +41,7 @@ class DataLoader(object):
                 xs,ps,ys,ts = [],[],[],[]
                 for fname in list_of_files:
                     f = file(fname, "rb")
-                    x,p,y,t,self.obj2label = cPickle.load(f)#( (), f, protocol=cPickle.HIGHEST_PROTOCOL)
+                    x,p,y,t,self.obj2label = pickle.load(f)
                     f.close()
                     xs.append(x)
                     ys.append(y)
@@ -53,7 +53,7 @@ class DataLoader(object):
                 self.p = np.concantenate(ps)
             else:
                 f = file(list_of_files[0], "rb")
-                self.x,self.p,self.y,self.t,self.obj2label = cPickle.load(f)#( (), f, protocol=cPickle.HIGHEST_PROTOCOL)
+                self.x,self.p,self.y,self.t,self.obj2label = pickle.load(f)
                 f.close()
             print( "data size:",self.x.shape)
             print( "target shape:",self.y.shape)
