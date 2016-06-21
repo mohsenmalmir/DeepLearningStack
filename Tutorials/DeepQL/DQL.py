@@ -221,6 +221,7 @@ for exp_num in range(20):
         print("Epoch:",epoch)
         costs           = []
         val_costs       = []
+        test_costs      = []
         train_data.reset_minibatch_counter()
         corrects         = np.zeros([n_moves,batch_size])
         move_hist        = np.zeros([num_actions,],dtype=np.int32)
@@ -358,7 +359,7 @@ for exp_num in range(20):
     print("##################################################")
 
     experiment_data[exp_num]["test_dpq_acc"] = corrects.sum(axis=1) / float(test_data.x.shape[0])
-    experiment_data[exp_num]["test_RMSE"]    = test_costs
+    experiment_data[exp_num]["val_RMSE"]     = val_costs
     experiment_data[exp_num]["train_RMSE"]   = costs
     experiment_data[exp_num]["train_net"]    = copy.deepcopy(train_net)
     experiment_data[exp_num]["test_net"]     = test_net
@@ -406,7 +407,7 @@ plt.figure(2)
 i=2
 plt.plot(np.log(experiment_data[i]["train_RMSE"]),c='b')
 plt.hold(True)
-plt.plot(np.log(experiment_data[i]["test_RMSE"]),c='r')
+plt.plot(np.log(experiment_data[i]["val_RMSE"]),c='r')
 
 
 plt.show()
