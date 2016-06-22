@@ -141,9 +141,18 @@ for exp_num in range(2):
     layer_action          = "act1"
     cost                  = T.sqrt( T.mean( (train_net.name2layer[layer_action_value].output[rot_index_shared,T.arange(batch_size)] -  rot_target_shared)**2 ) )
 
-    grads                 = [theano.grad(cost,param) for param in train_net.params]
 
-    updates               = [ (param,param-learning_rate * grad) for param,grad in zip(train_net.params,grads)]
+    #weight update with SGD and momentum
+    updates               = []
+    mmnt                  = []
+    for param in train_net.params:
+        grad              = T.grad(cost,param)
+        mmnt.append(theano.shared(np.zeros_like(param.get_value())))
+        updates.append((mmnt[-1], 0.9 * mmnt[-1] + 0.1 * learning_rate * grad ) )
+        updates.append((param, param - mmnt[-1] - 0.0005 * param) )
+
+
+
 
     fnx_action_selection  = theano.function(inputs=[],outputs=[train_net.name2layer[layer_action].output,train_net.name2layer[layer_action_value].output,cost],
                                                 givens={
