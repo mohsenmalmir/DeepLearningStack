@@ -420,14 +420,14 @@ for axis in ['top','bottom','left','right']:
 i += 1
 plt.xticks(range(n_test_moves+1))
 
-######################################################
-#       PLOTTING RMSE 
-######################################################
-plt.figure(2)
-i=0
-plt.plot(np.log(experiment_data[i]["train_RMSE"]),c='b')
-plt.hold(True)
-plt.plot(np.log(experiment_data[i]["val_RMSE"]),c='r')
+#######################################################
+##       PLOTTING RMSE 
+#######################################################
+#plt.figure(2)
+#i=0
+#plt.plot(np.log(experiment_data[i]["train_RMSE"]),c='b')
+#plt.hold(True)
+#plt.plot(np.log(experiment_data[i]["val_RMSE"]),c='r')
 
 
 plt.show()
