@@ -245,13 +245,14 @@ for exp_num in range(20):
             x,y,p,t,rng    = train_data.get_next_minibatch()
             poses_hist.append(p)
             beliefs        = x.copy()
+            #perform n_moves actions on the object, and update the weights after each move
             for mv in range(n_moves):
                 iter_cnt      += 1
                 epsilon = max(0.1, 1.0 - iter_cnt / 20000.)
                 if iter_cnt%lr_dec_step==lr_dec_step-1:
                     lr = max(1.e-4,lr * 0.1)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
-                rot,prot,_     = fnx_action_selection()
+                rot,prot,_     = fnx_action_selection()#calculate actions on current image
                 rot            = rot.reshape(-1)
                 #epsilon-greedy exploration
                 rand_acts      = np.random.randint(0,num_actions,[batch_size])
@@ -264,10 +265,13 @@ for exp_num in range(20):
                 rot            = temp111
                 rot_idx        = rot.copy().astype(np.int32)
                 assert(rot_idx.shape[0]==batch_size)
+                #histogram of actions, only for debugging
                 hst            = np.histogram(rot_idx,bins=range(0,num_actions))[0]
                 for kk in range(rot_idx.shape[0]):
                     move_hist[rot_idx[kk]] += 1
+                #calculate target pose for each action
                 tgt            = -1 * ( rot < num_actions/2) * 2**(rot+num_actions/2) + ( rot >= num_actions/2) * 2**(rot)
+                #acquire the next images, according to the currently selected actions
                 x1,y1,p1,t1,_  = train_data.get_data_for_pose(t,p + tgt)#get the data for the proposed set of rotations
                 assert((t1==t).sum()==batch_size)
                 assert((y1==y).sum()==batch_size)
@@ -279,14 +283,16 @@ for exp_num in range(20):
                 prot_max       = gamma * np.max(prot1,axis=0).reshape(-1).astype(theano.config.floatX)
                 #reward each move based on the amount of belief increase
                 srtd_beliefs   = np.sort(x1,axis=1)#x1 should be 'beliefs' if we use Q = r(t) + gamma max_a Q(s,a').
-                #if mv == n_moves-1:
+                #reward if correctly classified
                 prot_max      += R * (pred_rslt==y1)* (srtd_beliefs[:,-1] - srtd_beliefs[:,-2]).reshape(-1)
                 prot_max      -= R * (pred_rslt!=y1)
                 prot_max       = alpha * prot_max + (1-alpha) * prot[rot_idx,range(batch_size)].reshape(-1)
                 corrects[mv,:] += (pred_rslt==y)
+                #update the target value, based on Q-learning update rule
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
                 rot_target_shared.set_value(prot_max.astype(theano.config.floatX))
                 rot_index_shared.set_value(rot_idx.reshape(-1))
+                #weight update
                 prot2,c         = fnx_train(lr)
                 costs.append(c)
                 x,y,p,t,_       = train_data.get_data_for_pose(t,p + tgt)#get the data for the proposed set of rotations
@@ -328,7 +334,7 @@ for exp_num in range(20):
         print("learning rate:",lr," RL epsilon:",epsilon)
 
 
-
+        #capture the accuracy of the model on the test data
         test_accuracies = []
         test_poses_hist    = []
         corrects           = np.zeros([n_test_moves,batch_size])
@@ -365,7 +371,7 @@ for exp_num in range(20):
         print("test:",corrects.sum(axis=1) / float(test_data.x.shape[0]))
         test_accuracies.append(corrects.sum(axis=1) / float(test_data.x.shape[0]))
     print("##################################################")
-
+    #store the results of each experiment in this dictionary
     experiment_data[exp_num]["test_dpq_acc"] = corrects.sum(axis=1) / float(test_data.x.shape[0])
     experiment_data[exp_num]["val_RMSE"]     = val_costs
     experiment_data[exp_num]["train_RMSE"]   = costs
