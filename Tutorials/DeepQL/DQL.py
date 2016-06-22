@@ -98,7 +98,7 @@ print("number of tracks:",np.unique(test_data.t).shape[0])
 experiment_data = dict()
 #train 20 different models, report the mean average
 
-for exp_num in range(2):
+for exp_num in range(20):
     
     test_data.shuffle_data()
     
@@ -376,6 +376,9 @@ for exp_num in range(2):
     print( "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 
 
+######################################################
+#       PLOTTING AVERAGAE ACCURACY VS. NUMBER OF ACTIONS 
+######################################################
 colors    = ["r","g","b","c","y","m","k"]
 linestyle = ["-","--","-.",":"]
 marker    = ["o","v","^","<",">","*"]
@@ -411,6 +414,9 @@ for axis in ['top','bottom','left','right']:
 i += 1
 plt.xticks(range(n_test_moves+1))
 
+######################################################
+#       PLOTTING RMSE 
+######################################################
 plt.figure(2)
 i=0
 plt.plot(np.log(experiment_data[i]["train_RMSE"]),c='b')
