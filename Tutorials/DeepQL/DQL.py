@@ -240,7 +240,7 @@ for exp_num in range(2):
                 iter_cnt      += 1
                 epsilon = max(0.1, 1.0 - iter_cnt / 20000.)
                 if iter_cnt%lr_dec_step==lr_dec_step-1:
-                    lr = max(1.e-10,lr * 0.1)
+                    lr = max(1.e-4,lr * 0.1)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
                 rot,prot,_     = fnx_action_selection()
                 rot            = rot.reshape(-1)
