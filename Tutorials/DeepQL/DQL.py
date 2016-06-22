@@ -238,7 +238,7 @@ for exp_num in range(2):
             beliefs        = x.copy()
             for mv in range(n_moves):
                 iter_cnt      += 1
-                epsilon = max(0.00, 1.0 - iter_cnt / 20000.)
+                epsilon = max(0.1, 1.0 - iter_cnt / 20000.)
                 if iter_cnt%lr_dec_step==lr_dec_step-1:
                     lr = max(1.e-10,lr * 0.1)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
