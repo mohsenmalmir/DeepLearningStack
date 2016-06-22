@@ -270,9 +270,9 @@ for exp_num in range(2):
                 prot_max       = gamma * np.max(prot1,axis=0).reshape(-1).astype(theano.config.floatX)
                 #reward each move based on the amount of belief increase
                 srtd_beliefs   = np.sort(x1,axis=1)#x1 should be 'beliefs' if we use Q = r(t) + gamma max_a Q(s,a').
-                if mv == n_moves-1:
-                    prot_max      += R * (pred_rslt==y1)* (srtd_beliefs[:,-1] - srtd_beliefs[:,-2]).reshape(-1)
-                    prot_max      -= R * (pred_rslt!=y1)
+                #if mv == n_moves-1:
+                prot_max      += R * (pred_rslt==y1)* (srtd_beliefs[:,-1] - srtd_beliefs[:,-2]).reshape(-1)
+                prot_max      -= R * (pred_rslt!=y1)
                 prot_max       = alpha * prot_max + (1-alpha) * prot[rot_idx,range(batch_size)].reshape(-1)
                 corrects[mv,:] += (pred_rslt==y)
                 input_shared.set_value(beliefs.T.astype(theano.config.floatX))
