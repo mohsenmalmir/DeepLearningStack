@@ -16,7 +16,7 @@ pip install DeepLearningStack
 ```
 
 #Tutorials
-#AlexNet
+##AlexNet
 This tutorial shows how to create a simple convnet using an XML configuration file. The network is defined in *AlexNet.xml*, which defines different layers and connect them to each other to form the computation graph of the network. Each layer is deined as
 ```
 <layer type="" name="">
@@ -33,7 +33,7 @@ This tutorial shows how to create a simple convnet using an XML configuration fi
 </layer>
 ```
 Each layer should have a type, e.g. convolution, and an arbitrary but unique name. The name of the layer is used to direct its output to another layer through the ```<input>``` tag. Each layer type has layer-specific parameters, such as kernel size for convolution layer. See *config/Layers.xml* for a complete list of layers and their parameters.
-#Deep Q-learning
+##Deep Q-learning
 This tutorial implements the deep Q-learning method for active object recognition described in [1]. Active object recognition deals with smart exploration of objects to achieve higher accuracies with smaller number of images processed. A neural network is trained, using Q-learning iterative update rule, to perform a series of actions on GEMRS [2] objects to increase the accuracy of label prediction. The architecture of the network defined in ```DQLArch.xml``` is composed of two fully connected layers followed by softmax, which predicts the action-values for 10 different actions. The actions rotate the objects inward or outward w.r.t camera with different magnitudes.
 
 To run this tutorial, you need to download the GERMS dataset from [3]. These are the belief vectors over different object labels, calculated from features extracted by VGG 7-layer network. This network was pre-trained on ImageNet, and was not fine-tuned for GERMS. After downloading the belief files, put them in ```Tutorials/DeepQL/``` and execute ```DQL.py``` script.
