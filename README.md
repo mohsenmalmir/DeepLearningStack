@@ -32,3 +32,14 @@ This tutorial shows how to create a simple convnet using an XML configuration fi
 </layer>
 ```
 Each layer should have a type, e.g. convolution, and an arbitrary but unique name. The name of the layer is used to direct its output to another layer through the ```<input>``` tag. Each layer type has layer-specific parameters, such as kernel size for convolution layer. See *config/Layers.xml* for a complete list of layers and their parameters.
+#Deep Q-learning
+This tutorial implements the deep Q-learning method for active object recognition described in [1].
+
+
+
+
+
+
+
+[1] Malmir M, Sikka K, Forster D, Movellan J, Cottrell GW. Deep Q-learning for Active Recognition of GERMS: Baseline performance on a standardized dataset for active learning. InProceedings of the British Machine Vision Conference (BMVC), pages 2016 Apr 13 (pp. 161-1).
+
