@@ -84,6 +84,7 @@ class FeedForwardNet(object):
         self.params      = []
         self.tied        = dict()
         while not netbuilt:
+            layer_added = False#for debugging network structure
             for layer in layers_def:
                 #find the the layer's name and type
                 layer_name,layer_type = layer.attrib["name"],layer.attrib["type"]
@@ -124,30 +125,14 @@ class FeedForwardNet(object):
                     self.supplied_inputs[layer_name]     = newLayer.output
                     self.output_dims[layer_name]         = newLayer.output_shape
                     layers_def.remove(layer)
-#                elif layer_input not in self.supplied_inputs.keys():
-#                    continue
-#                else:
-#                    print ("creating layer:",layer_name, "with input: ",layer_input)
-#                    #create the layer, add it to self.layers
-#                    #each layer is initialized by its definition from xml, its input variable, the dimensions of its input and rs
-#                    #if cloning, then initialize this layer from the clone
-#                    if clone_from!=None and (layer_name in clone_from.name2layer.keys()):
-#                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=clone_from.name2layer[layer_name])
-#                        self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
-#                    elif tie_from!=None:#if the parameters are tied to gether
-#                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=self.name2layer[tie_from])
-#                        self.tied[layer_name] = True 
-#                    else:
-#                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng)
-#                        self.tied[layer_name] = False 
-#                    self.layers.append(newLayer)#create layer from xml definition
-#                    self.name2layer[layer_name]          = newLayer
-#                    self.params                         += newLayer.params
-#                    self.supplied_inputs[layer_name]     = newLayer.output
-#                    self.output_dims[layer_name]         = newLayer.output_shape
-#                    layers_def.remove(layer)
+                    layer_added                          = True
             if len(layers_def)==0:
                 netbuilt = True
+            if layer_added==False:
+                print("Error: Can't add any new layer to the network!")
+                print("Please check network structure for incorrect links.")
+                print("Correctly created layers:")
+                pprint.pprint(self.output_dims)
         print ("network built!")
 
 
