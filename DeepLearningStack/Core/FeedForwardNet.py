@@ -85,53 +85,38 @@ class FeedForwardNet(object):
         self.tied        = dict()
         while not netbuilt:
             for layer in layers_def:
+                #find the the layer's name and type
                 layer_name,layer_type = layer.attrib["name"],layer.attrib["type"]
-                #print layer_name
-                layer_input           = layer.find("input").text if layer.find("input") is not None else None
+                layer_inputs          = layer.findall("input")#layer.find("input").text if layer.find("input") is not None else None
+                #indicates if the parameters have to be the same as some other layer
                 tie_from              = layer.find("tie").text if layer.find("tie") is not None else None
+                #check if all the inputs to the network are already supplied
+                inputs_text           = [inp.text for inp in inputs]
+                input_satiesfied      = [inp.text in self.supplied_inputs.keys() for inp in inputs]
                 #if a layer's params are tied to another layer, make sure the first layer is already created
                 if tie_from != None and tie_from not in self.name2layer.keys():
                     continue
-                if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer","ElementWise","GaussianObs"]:
-                    #check for all inputs
-                    print ("creating layer:",layer_name, "with multiple inputs: ")
-                    inputs           = layer.findall("input")
-                    inputs_text      = [inp.text for inp in inputs]
-                    input_satiesfied = [inp.text in self.supplied_inputs.keys() for inp in inputs]
-                    if np.all(input_satiesfied):
-                        inputs       = [self.supplied_inputs[inp] for inp in inputs_text]
-                        output_dims  = [self.output_dims[inp] for inp in inputs_text]
-                        #if cloning, then initialize this layer from the clone
-                        if clone_from!=None and (layer_name in clone_from.name2layer.keys()):
-                            newLayer    = type2class[layer_type](layer,inputs,output_dims,rng,clone_from=clone_from.name2layer[layer_name])
-                            self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
-                        elif tie_from!=None:#if the parameters are tied to gether
-                            newLayer    = type2class[layer_type](layer,inputs,output_dims,rng,clone_from=self.name2layer[tie_from])
-                            self.tied[layer_name] = True 
-                        else:
-                            newLayer    = type2class[layer_type](layer,inputs,output_dims,rng)
-                            self.tied[layer_name] = False 
-                        self.layers.append(newLayer)#create layer from xml definition
-                        self.name2layer[layer_name]          = newLayer
-                        self.params                         += newLayer.params
-                        self.supplied_inputs[layer_name]     = newLayer.output
-                        self.output_dims[layer_name]         = newLayer.output_shape
-                        layers_def.remove(layer)
-                elif layer_input not in self.supplied_inputs.keys():
-                    continue
-                else:
-                    print ("creating layer:",layer_name, "with input: ",layer_input)
-                    #create the layer, add it to self.layers
-                    #each layer is initialized by its definition from xml, its input variable, the dimensions of its input and rs
-                    #if cloning, then initialize this layer from the clone
+                #if layer_type in ["Concatenate","DepthConcat","NaiveBayesBeliefUpdate","DirichletLayer","ElementWise","GaussianObs"]:
+                #check for all inputs
+                if np.all(input_satiesfied):
+                    print ("creating layer:",layer_name)
+                    symvar_inputs     = [self.supplied_inputs[inp] for inp in inputs_text]
+                    symvar_sizes      = [self.output_dims[inp] for inp in inputs_text]
+                    #this is to make sure that layers with 1 input will not receive a list variable
+                    if len(symvar_inputs)==1:
+                        symvar_inputs = symvar_inputs[0]
+                        symvar_sizes  = symvar_sizes[0]
+                    #if cloning and the layer is found in the source network, then initialize this layer from the clone
                     if clone_from!=None and (layer_name in clone_from.name2layer.keys()):
-                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=clone_from.name2layer[layer_name])
+                        newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=clone_from.name2layer[layer_name])
                         self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
+                    #else if it is tied, then create it using the tied network
                     elif tie_from!=None:#if the parameters are tied to gether
-                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=self.name2layer[tie_from])
+                        newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=self.name2layer[tie_from])
                         self.tied[layer_name] = True 
+                    #otherwise simply create it with regular initialization of parameters
                     else:
-                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng)
+                        newLayer    = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng)
                         self.tied[layer_name] = False 
                     self.layers.append(newLayer)#create layer from xml definition
                     self.name2layer[layer_name]          = newLayer
@@ -139,6 +124,28 @@ class FeedForwardNet(object):
                     self.supplied_inputs[layer_name]     = newLayer.output
                     self.output_dims[layer_name]         = newLayer.output_shape
                     layers_def.remove(layer)
+#                elif layer_input not in self.supplied_inputs.keys():
+#                    continue
+#                else:
+#                    print ("creating layer:",layer_name, "with input: ",layer_input)
+#                    #create the layer, add it to self.layers
+#                    #each layer is initialized by its definition from xml, its input variable, the dimensions of its input and rs
+#                    #if cloning, then initialize this layer from the clone
+#                    if clone_from!=None and (layer_name in clone_from.name2layer.keys()):
+#                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=clone_from.name2layer[layer_name])
+#                        self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
+#                    elif tie_from!=None:#if the parameters are tied to gether
+#                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng,clone_from=self.name2layer[tie_from])
+#                        self.tied[layer_name] = True 
+#                    else:
+#                        newLayer    = type2class[layer_type](layer,self.supplied_inputs[layer_input],self.output_dims[layer_input],rng)
+#                        self.tied[layer_name] = False 
+#                    self.layers.append(newLayer)#create layer from xml definition
+#                    self.name2layer[layer_name]          = newLayer
+#                    self.params                         += newLayer.params
+#                    self.supplied_inputs[layer_name]     = newLayer.output
+#                    self.output_dims[layer_name]         = newLayer.output_shape
+#                    layers_def.remove(layer)
             if len(layers_def)==0:
                 netbuilt = True
         print ("network built!")
