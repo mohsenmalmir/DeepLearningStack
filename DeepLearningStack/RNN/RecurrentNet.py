@@ -149,8 +149,8 @@ class RecurrentNet(object):
             :param net_prev_timestep: this is the network created for the previous time step. It is used to tie the weights for current time step. 
         """
         #building network 
-        supplied_inputs  = copy.shallowcopy(nonrcrnt_inputs)
-        layers_def       = copy.shallowcopy(layers_def)
+        supplied_inputs  = copy.copy(nonrcrnt_inputs)
+        layers_def       = copy.copy(layers_def)
         netbuilt         = False
         layers           = []
         name2layer       = dict()
