@@ -26,7 +26,7 @@
             <method>Constant</method>
         </negslope>
     </layer>
-    <layer type="Concat" name="concat">
+    <layer type="Concatenate" name="concat">
         <input>rct1</input>
         <recurrent_input>rct1</recurrent_input>
         <recurrent_input>rct2</recurrent_input>
