@@ -121,7 +121,7 @@ class RecurrentNet(object):
                 self.name2layer[i][k] = name2layer[k]
 
 
-    def UnrollOneStep(layers_def, nonrcrnt_inputs, rcrnt_inputs, net_prev_timestep = None):
+    def UnrollOneStep(self,layers_def, nonrcrnt_inputs, rcrnt_inputs, net_prev_timestep = None):
         """
             This function unrolls a network for one step, e.g. creates a network graph
             that receives recurrent and non-recurrent inputs and produces the recurrent
