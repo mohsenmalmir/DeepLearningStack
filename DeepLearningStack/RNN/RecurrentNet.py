@@ -4,6 +4,7 @@ import sys
 import time
 import time
 import pprint
+import copy
 import numpy as np
 
 import theano
