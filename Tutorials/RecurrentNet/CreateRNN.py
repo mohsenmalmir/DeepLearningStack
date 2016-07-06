@@ -48,6 +48,7 @@ if __name__=="__main__":
         inputs.append(rcrnt_ins[k][0])
     #outputs of the network include the outputs for each time step
     outputs           = [rnn.name2layer[i]["act1"] for i in rnn.name2layer.keys()]
+    print("compiling the function")
     f                 = theano.function(inputs=inputs,outputs=outputs)
     #draw the RNN
     graph_img_name    = "RNN.png"
