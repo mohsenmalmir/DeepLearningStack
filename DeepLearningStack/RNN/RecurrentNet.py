@@ -191,7 +191,7 @@ class RecurrentNet(object):
                     if len(symvar_inputs)==1:
                         symvar_inputs = symvar_inputs[0]
                         symvar_sizes  = symvar_sizes[0]
-                    print("layer sizes:",symvar_sizes)
+                    #print("layer sizes:",symvar_sizes)
                     #if tying from the previous time step 
                     if net_prev_timestep!=None and (layer_name in net_prev_timestep.keys()):
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[layer_name])
@@ -228,8 +228,8 @@ class RecurrentNet(object):
                 assert(False) 
 
         print ("network built!")
-        print("recurrent outputs:")
-        pprint.pprint(rcrnt_output)
+        #print("recurrent outputs:")
+        #pprint.pprint(rcrnt_output)
         return layers,name2layer,params,output_dims,rcrnt_output,tied
        
 
