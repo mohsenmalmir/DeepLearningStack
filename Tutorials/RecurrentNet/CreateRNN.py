@@ -16,7 +16,7 @@ from DeepLearningStack import RecurrentNet
 if __name__=="__main__":
 
     #create deep net
-    num_timesteps     = 3 
+    num_timesteps     = 1 
     print ("Creating Recurrent Net for %d time steps"%num_timesteps)
     config            = "RNNArch.xml"
     #random number generator used to initialize the weights
