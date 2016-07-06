@@ -32,10 +32,9 @@ if __name__=="__main__":
     # rct1: 128x128
     # rct2: 128x128
     # fc3 : 10x128
-    rct1_step0        = T.matrix("rct1-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-    rct2_step0        = T.matrix("rct2-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-    fc3_step0         = T.matrix("fc3-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-    rcrnt_ins         = {"rct1":[rct1_step0,(128,128)],"rct2":[rct2_step0,(128,128)],"fc3":[fc3_step0,(10,128)]}
+    fc1_step0         = T.matrix("fc1-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
+    fc2_step0         = T.matrix("fc2-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
+    rcrnt_ins         = {"fc1":[fc1_step0,(128,128)],"rct2":[fc2_step0,(128,128)]}
 
     #create the graph structure
     rnn               = RecurrentNet.RecurrentNet( rng, nonrcrnt_ins, rcrnt_ins, config, unrolled_len=num_timesteps)
@@ -47,7 +46,7 @@ if __name__=="__main__":
     for k in rcrnt_ins.keys():
         inputs.append(rcrnt_ins[k][0])
     #outputs of the network include the outputs for each time step
-    outputs           = [rnn.name2layer[i]["act1"].output for i in rnn.name2layer.keys()]
+    outputs           = [rnn.name2layer[i]["fc2"].output for i in rnn.name2layer.keys()]
     print("compiling the function")
     f                 = theano.function(inputs=inputs,outputs=outputs)
     #draw the RNN
