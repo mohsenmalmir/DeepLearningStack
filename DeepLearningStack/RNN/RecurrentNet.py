@@ -216,7 +216,7 @@ class RecurrentNet(object):
                             rcrnt_output[layer_name] = (newLayer.output, newLayer.output_shape)
             if len(layers_def)==0:
                 netbuilt = True
-            if layer_added==False:
+            elif layer_added==False:
                 #if no layer was added, there is some connection error in the network's defintion file
                 # should check the xml file for non-existing inputs
                 print("Error: Can't add any new layer to the network!")
