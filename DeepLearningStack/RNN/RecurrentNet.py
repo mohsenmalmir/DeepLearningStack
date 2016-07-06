@@ -99,7 +99,7 @@ class RecurrentNet(object):
 
 
         #unroll the time step 0
-        layers,name2layer,params,output_dims,rcrnt_output = UnrollOneStep(layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
+        layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
         #store the layers in the object instance
         #layers and name2layer are now dictionaries from timestep to variables
         self.layers               = {0:[]}#each time step is an array
@@ -111,7 +111,7 @@ class RecurrentNet(object):
             self.name2layer[0][k] = name2layer[k]
         for i in range(1,unrolled_len):
             #unroll the time step i
-            layers,name2layer,params,output_dims,rcrnt_output = UnrollOneStep(layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
+            layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
             #store the layers in the object instance
             self.layers[i]        = []
             self.name2layer[i]    = dict() 
