@@ -47,7 +47,7 @@ if __name__=="__main__":
     for k in rcrnt_ins.keys():
         inputs.append(rcrnt_ins[k][0])
     #outputs of the network include the outputs for each time step
-    outputs           = [rnn.name2layer[i]["act1"] for i in rnn.name2layer.keys()]
+    outputs           = [rnn.name2layer[i]["act1"].output for i in rnn.name2layer.keys()]
     print("compiling the function")
     f                 = theano.function(inputs=inputs,outputs=outputs)
     #draw the RNN
