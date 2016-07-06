@@ -100,7 +100,7 @@ class RecurrentNet(object):
 
 
         #unroll the time step 0
-        layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
+        layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(rng, layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
         #store the layers in the object instance
         #layers and name2layer are now dictionaries from timestep to variables
         self.layers               = {0:[]}#each time step is an array
@@ -112,7 +112,7 @@ class RecurrentNet(object):
             self.name2layer[0][k] = name2layer[k]
         for i in range(1,unrolled_len):
             #unroll the time step i
-            layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
+            layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(rng, layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
             #store the layers in the object instance
             self.layers[i]        = []
             self.name2layer[i]    = dict() 
@@ -121,13 +121,16 @@ class RecurrentNet(object):
                 self.name2layer[i][k] = name2layer[k]
 
 
-    def UnrollOneStep(self,layers_def, nonrcrnt_inputs, rcrnt_inputs, net_prev_timestep = None):
+    def UnrollOneStep(self, rng, layers_def, nonrcrnt_inputs, rcrnt_inputs, net_prev_timestep = None):
         """
             This function unrolls a network for one step, e.g. creates a network graph
             that receives recurrent and non-recurrent inputs and produces the recurrent
             and non-recurrent outputs of the network for one step, e.g. one pass through
             the network.
         
+            :type rng: theano.tensor.shared_randomstreams.RandomStreams
+            :param rng: random number generator for weights initialization
+
             :type layers_def: list of xml.etree.ElementTree.Element
             :param layers_def: this is the parsed tree of the network's definition XML file
      
