@@ -185,6 +185,10 @@ class RecurrentNet(object):
                         elif elmnt.tag=="recurrent_input":
                             symvar_inputs.append( rcrnt_inputs[elmnt.text][0] )
                             symvar_sizes.append(  rcrnt_inputs[elmnt.text][1])
+                    #this is to make sure that layers with 1 input do not receive a list of 1 item
+                    if len(symvar_inputs)==1:
+                        symvar_inputs = symvar_inputs[0]
+                        symvar_sizes  = symvar_sizes[0]
                     print(symvar_sizes)
                     #if tying from the previous time step 
                     if net_prev_timestep!=None and (layer_name in net_prev_timestep.keys()):
