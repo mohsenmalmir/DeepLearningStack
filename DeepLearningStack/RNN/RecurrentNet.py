@@ -100,7 +100,7 @@ class RecurrentNet(object):
 
 
         #unroll the time step 0
-        layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(rng, layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
+        layers,name2layer,params,output_dims,rcrnt_output,tied = self.UnrollOneStep(rng, layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
         #store the layers in the object instance
         #layers and name2layer are now dictionaries from timestep to variables
         self.layers               = {0:[]}#each time step is an array
@@ -110,9 +110,10 @@ class RecurrentNet(object):
         for k in name2layer.keys():
             self.layers[0].append(name2layer[k])
             self.name2layer[0][k] = name2layer[k]
+        self.tied                 = tied#this is just for time step 0, since all the parameters in time steps > 0 are tied to time step 0
         for i in range(1,unrolled_len):
             #unroll the time step i
-            layers,name2layer,params,output_dims,rcrnt_output = self.UnrollOneStep(rng, layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
+            layers,name2layer,params,output_dims,rcrnt_output,tied = self.UnrollOneStep(rng, layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
             #store the layers in the object instance
             self.layers[i]        = []
             self.name2layer[i]    = dict() 
@@ -193,15 +194,15 @@ class RecurrentNet(object):
                     #if tying from the previous time step 
                     if net_prev_timestep!=None and (layer_name in net_prev_timestep.keys()):
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[layer_name])
-                        self.tied[layer_name] = True#if this is a copy from the previous time step, then it is tied 
+                        tied[layer_name]      = True#if this is a copy from the previous time step, then it is tied 
                     #tying from the current time step
                     elif tie_from!=None:#if the parameters are tied to gether
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[tie_from])
-                        self.tied[layer_name] = True#if this is a tie from current time step, 
+                        tied[layer_name]      = True#if this is a tie from current time step, 
                     #otherwise simply create it with regular initialization of parameters
                     else:
                         newLayer    = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng)
-                        self.tied[layer_name] = False 
+                        tied[layer_name]      = False 
                         params               += newLayer.params
                     layers.append(newLayer)#create layer from xml definition
                     name2layer[layer_name]          = newLayer
@@ -223,7 +224,7 @@ class RecurrentNet(object):
                 pprint.pprint(self.output_dims)
 
         print ("network built!")
-        return layers,name2layer,params,output_dims,rcrnt_output
+        return layers,name2layer,params,output_dims,rcrnt_output,tied
        
 
 
