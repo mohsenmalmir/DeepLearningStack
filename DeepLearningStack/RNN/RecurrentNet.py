@@ -207,7 +207,7 @@ class RecurrentNet(object):
                         params               += newLayer.params
                     layers.append(newLayer)#create layer from xml definition
                     name2layer[layer_name]          = newLayer
-                    supplied_inputs[layer_name]     = newLayer.output
+                    supplied_inputs[layer_name]     = [newLayer.output, newLayer.output_shape]
                     output_dims[layer_name]         = newLayer.output_shape
                     layers_def.remove(layer)
                     #produce a separate list for recurrent outputs
