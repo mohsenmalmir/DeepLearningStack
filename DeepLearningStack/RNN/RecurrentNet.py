@@ -100,10 +100,24 @@ class RecurrentNet(object):
 
         #unroll the time step 0
         layers,name2layer,params,output_dims,rcrnt_output = UnrollOneStep(layers_def, nonrcrnt_inputs[0], rcrnt_inputs)
-        self.supplied_inputs      = inputs#dict of name:symvar
-        self.output_dims          = dict()#dictionary of inp:size for the input
-        for inp_name in inputs.keys():
-            self.output_dims[inp_name] = []
+        #store the layers in the object instance
+        #layers and name2layer are now dictionaries from timestep to variables
+        self.layers               = {0:[]}#each time step is an array
+        self.name2layer           = { 0:{} }#each time step is a dictionary
+        self.params               = params#the parameters are only from the time step 0, since the rest of time steps are tied to timestep 0 
+        self.output_dims          = output_dims#this is only for time step 0, since the rest of time steps are copies of time step 0
+        for k in name2layer.keys():
+            self.layers[0].append(name2layer[k])
+            self.name2layer[0][k] = name2layer[k]
+        for i in range(1,unrolled_len):
+            #unroll the time step i
+            layers,name2layer,params,output_dims,rcrnt_output = UnrollOneStep(layers_def, nonrcrnt_inputs[i], rcrnt_output, self.name2layer[i-1])
+            #store the layers in the object instance
+            self.layers[i]        = []
+            self.name2layer[i]    = dict() 
+            for k in name2layer.keys():
+                self.layers[i].append(name2layer[k])
+                self.name2layer[i][k] = name2layer[k]
 
 
     def UnrollOneStep(layers_def, nonrcrnt_inputs, rcrnt_inputs, net_prev_timestep = None):
@@ -138,6 +152,7 @@ class RecurrentNet(object):
         params           = []
         tied             = dict()
         rcrnt_output     = dict()
+        output_dims      = dict()
         while not netbuilt:
             layer_added  = False
             for layer in layers_def:

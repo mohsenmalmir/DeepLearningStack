@@ -28,6 +28,7 @@
     </layer>
     <layer type="Concat" name="concat">
         <input>rct1</input>
+        <recurrent_input>rct1</recurrent_input>
         <recurrent_input>rct2</recurrent_input>
         <recurrent_input>fc3</recurrent_input>
     </layer>
