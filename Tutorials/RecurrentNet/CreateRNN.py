@@ -52,6 +52,6 @@ if __name__=="__main__":
     #draw the RNN
     graph_img_name    = "RNN.png"
     print("creating graph picture in:",graph_img_name)
-    theano.printing.pydotprint(f, outfile=graph_img_name, var_with_name_simple=True)  
+    theano.printing.pydotprint(outputs, outfile=graph_img_name, var_with_name_simple=True)  
 
 
