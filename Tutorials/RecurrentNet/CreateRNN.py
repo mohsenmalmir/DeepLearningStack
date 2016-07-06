@@ -8,7 +8,7 @@ import numpy as np
 
 sys.path.append("../../DeepLearningStack")
 #import DeepLearningStack
-from .RNN import RecurrentNet
+from RNN import RecurrentNet
 
 
 
