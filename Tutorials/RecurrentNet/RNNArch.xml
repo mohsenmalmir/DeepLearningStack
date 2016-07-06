@@ -11,7 +11,7 @@
         <CloneCoeff>1.0</CloneCoeff>
         <bias>1.0</bias>
     </layer>
-    <layer type="Rectifier" name="rct1">
+    <layer type="Rectifier" name="rct1" feedback_output="yes">
         <input>fc1</input>
         <posslope>
             <min>0.0</min>
