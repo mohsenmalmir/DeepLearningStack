@@ -43,7 +43,7 @@ if __name__=="__main__":
     #create a function for RNN
     
     #inputs to the graph consists of the recurrent inputs for time step 0 and non-recurrent inputs for all time steps
-    inputs            = [nonrcrnt_ins[k][0] for k in nonrcrnt_ins.keys()]
+    inputs            = [nonrcrnt_ins[k][0] for k in range(len(nonrcrnt_ins))]
     for k in rcrnt_ins.keys():
         inputs.append(rcrnt_ins[k][0])
     #outputs of the network include the outputs for each time step
