@@ -185,6 +185,7 @@ class RecurrentNet(object):
                         elif elmnt.tag=="recurrent_input":
                             symvar_inputs.append( rcrnt_inputs[elmnt.text][0] )
                             symvar_sizes.append(  rcrnt_inputs[elmnt.text][1])
+                    print(symvar_sizes)
                     #if tying from the previous time step 
                     if net_prev_timestep!=None and (layer_name in net_prev_timestep.keys()):
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[layer_name])
