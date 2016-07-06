@@ -26,7 +26,7 @@ if __name__=="__main__":
     #size of the input layer is 136x128,
     for t in range(num_timesteps):
         in_matrix     = T.matrix("data-step-%d"%t,dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-        nonrcrnt_ins.append( {"data1":[in_matrix,(136,128)]} )#for each input, provide a symbolic variable and its size
+        nonrcrnt_ins.append( {"input":[in_matrix,(136,128)]} )#for each input, provide a symbolic variable and its size
     #create the recurrent inputs for time step 0
     #size of the recurrent inputs according to RNNArch.xml (batch size is 128, each size is dim x batch_size)
     # rct1: 128x128
