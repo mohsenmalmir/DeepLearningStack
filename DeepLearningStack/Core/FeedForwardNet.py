@@ -130,8 +130,8 @@ class FeedForwardNet(object):
                 netbuilt = True
             if layer_added==False:
                 print("Error: Can't add any new layer to the network!")
-                print("Please check network structure for incorrect links.")
-                print("Correctly created layers:")
+                print("Please check network structure for incorrect links and non-existing inputs.")
+                print("Here is a list of correctly created layers:")
                 pprint.pprint(self.output_dims)
         print ("network built!")
 
