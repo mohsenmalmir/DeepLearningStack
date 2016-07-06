@@ -228,6 +228,8 @@ class RecurrentNet(object):
                 assert(False) 
 
         print ("network built!")
+        print("recurrent outputs:")
+        pprint.pprint(rcrnt_output)
         return layers,name2layer,params,output_dims,rcrnt_output,tied
        
 
