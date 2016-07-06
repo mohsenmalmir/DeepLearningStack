@@ -40,7 +40,18 @@ if __name__=="__main__":
     #create the graph structure
     rnn               = RecurrentNet.RecurrentNet( rng, nonrcrnt_ins, rcrnt_ins, config, unrolled_len=num_timesteps)
 
+    #create a function for RNN
+    
+    #inputs to the graph consists of the recurrent inputs for time step 0 and non-recurrent inputs for all time steps
+    inputs            = [nonrcrnt_ins[k][0] for k in nonrcrnt_ins.keys()]
+    for k in rcrnt_ins.keys():
+        inputs.append(rcrnt_ins[k][0])
+    #outputs of the network include the outputs for each time step
+    outputs           = [rnn.name2layer[i]["act1"] for i in rnn.name2layer.keys()]
+    f                 = theano.function(inputs=inputs,outputs=outputs)
     #draw the RNN
-    theano.printing.pydotprint(rnn.name2layer[num_timesteps-1]["act1"], outfile="RNN.png", var_with_name_simple=True)  
+    graph_img_name    = "RNN.png"
+    print("creating graph picture in:",graph_img_name)
+    theano.printing.pydotprint(f, outfile=graph_img_name, var_with_name_simple=True)  
 
 
