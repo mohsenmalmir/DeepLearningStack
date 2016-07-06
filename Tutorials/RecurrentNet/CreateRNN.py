@@ -27,9 +27,9 @@ if __name__=="__main__":
         in_matrix     = T.matrix("data-step-%d"%t,dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
         nonrcrnt_ins.append( {"data1":in_matrix} )
     #create the recurrent inputs for time step 0
-    rct1_step0        = T.matrix("rct1-step-0"%t,dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-    rct2_step0        = T.matrix("rct2-step-0"%t,dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-    fc3_step0         = T.matrix("fc3-step-0"%t,dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
+    rct1_step0        = T.matrix("rct1-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
+    rct2_step0        = T.matrix("rct2-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
+    fc3_step0         = T.matrix("fc3-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
     rcrnt_ins         = {"rct1":rct1_step0,"rct2":rct2_step0,"fc3":fc3_step0}
 
     #create the graph structure
