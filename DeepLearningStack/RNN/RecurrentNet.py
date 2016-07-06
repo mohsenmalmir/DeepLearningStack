@@ -176,6 +176,7 @@ class RecurrentNet(object):
                 #check if all recurrent and non-recurrent inputs are satisfied 
                 if np.all(nonrecrnt_ins_satiesfied) and np.all(rcrnt_ins_satiesfied): 
                     print ("creating layer:",layer_name)
+                    layer_added       = True
                     #arrange all the inputs in the order that is specified in the XML,
                     symvar_inputs     = []
                     symvar_sizes      = []
