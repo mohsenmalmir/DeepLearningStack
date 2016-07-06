@@ -34,7 +34,7 @@ if __name__=="__main__":
     # fc3 : 10x128
     fc1_step0         = T.matrix("fc1-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
     fc2_step0         = T.matrix("fc2-step-0",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
-    rcrnt_ins         = {"fc1":[fc1_step0,(128,128)],"rct2":[fc2_step0,(128,128)]}
+    rcrnt_ins         = {"fc1":[fc1_step0,(128,128)],"fc2":[fc2_step0,(128,128)]}
 
     #create the graph structure
     rnn               = RecurrentNet.RecurrentNet( rng, nonrcrnt_ins, rcrnt_ins, config, unrolled_len=num_timesteps)
