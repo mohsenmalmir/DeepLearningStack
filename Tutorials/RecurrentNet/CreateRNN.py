@@ -6,7 +6,7 @@ import sys
 import time
 import numpy as np
 
-sys.addpath("../../DeepLearningStack")
+sys.path.append("../../DeepLearningStack")
 #import DeepLearningStack
 from .RNN import RecurrentNet
 
