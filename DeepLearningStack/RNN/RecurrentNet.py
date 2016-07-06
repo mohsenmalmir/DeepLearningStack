@@ -121,28 +121,28 @@ class RecurrentNet(object):
 
 
     def UnrollOneStep(layers_def, nonrcrnt_inputs, rcrnt_inputs, net_prev_timestep = None):
-    """
-        This function unrolls a network for one step, e.g. creates a network graph
-        that receives recurrent and non-recurrent inputs and produces the recurrent
-        and non-recurrent outputs of the network for one step, e.g. one pass through
-        the network.
-    
-        :type layers_def: list of xml.etree.ElementTree.Element
-        :param layers_def: this is the parsed tree of the network's definition XML file
- 
-        :type nonrcrnt_inputs: dictionary of name:(symvar,size) 
-        :param symvars: a dictionary of symbolic variables and their size, referred to by the name. 
-        :               The name comes from the network definition XML file.
-        :               These are the inputs that are provided from external source, e.g. not from the network's output
+        """
+            This function unrolls a network for one step, e.g. creates a network graph
+            that receives recurrent and non-recurrent inputs and produces the recurrent
+            and non-recurrent outputs of the network for one step, e.g. one pass through
+            the network.
+        
+            :type layers_def: list of xml.etree.ElementTree.Element
+            :param layers_def: this is the parsed tree of the network's definition XML file
+     
+            :type nonrcrnt_inputs: dictionary of name:(symvar,size) 
+            :param symvars: a dictionary of symbolic variables and their size, referred to by the name. 
+            :               The name comes from the network definition XML file.
+            :               These are the inputs that are provided from external source, e.g. not from the network's output
 
 
-        :type rcrnt_inputs: dictionary of name:(symvar,size) 
-        :param rcrnt_inputs: This is a dictionary of recurrent inputs to the network. It indicates the name and size of 
-        :                    symbolic variables that are produced by the network at time step t-1, where t is the current time step 
+            :type rcrnt_inputs: dictionary of name:(symvar,size) 
+            :param rcrnt_inputs: This is a dictionary of recurrent inputs to the network. It indicates the name and size of 
+            :                    symbolic variables that are produced by the network at time step t-1, where t is the current time step 
 
-        :type net_prev_timestep: dictionary of name:symvar 
-        :param net_prev_timestep: this is the network created for the previous time step. It is used to tie the weights for current time step. 
-    """
+            :type net_prev_timestep: dictionary of name:symvar 
+            :param net_prev_timestep: this is the network created for the previous time step. It is used to tie the weights for current time step. 
+        """
         #building network 
         supplied_inputs  = copy.deepcopy(nonrcrnt_inputs)
         layers_def       = copy.deepcopy(layers_def)
