@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 import DeepLearningStack
-from DeepLearningStack import FeedForwardNet
+from DeepLearningStack import RecurrentNet
 
 
 
