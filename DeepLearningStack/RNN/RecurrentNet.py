@@ -222,6 +222,7 @@ class RecurrentNet(object):
                 print("Please check network structure for incorrect links and non-existing inputs.")
                 print("Here is a list of correctly created layers:")
                 pprint.pprint(output_dims)
+                assert(False) 
 
         print ("network built!")
         return layers,name2layer,params,output_dims,rcrnt_output,tied
