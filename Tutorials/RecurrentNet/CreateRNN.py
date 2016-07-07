@@ -5,6 +5,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 import sys
 import time
 import numpy as np
+import pprint
 
 sys.path.append("../..")
 import DeepLearningStack
