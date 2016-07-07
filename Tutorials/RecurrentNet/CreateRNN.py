@@ -39,6 +39,8 @@ if __name__=="__main__":
 
     #create the graph structure
     rnn               = RecurrentNet.RecurrentNet( rng, nonrcrnt_ins, rcrnt_ins, config, unrolled_len=num_timesteps)
+    print("RNN params:")
+    pprint.pprint(rnn.params)
 
     #create a function for RNN
     
