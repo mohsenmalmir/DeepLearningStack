@@ -13,7 +13,6 @@
     </layer>
     <layer type="Concatenate" name="concat">
         <input>fc1</input>
-        <recurrent_input>fc1</recurrent_input>
         <recurrent_input>fc2</recurrent_input>
     </layer>
     <layer type="LU" name="fc2" feedback_output="yes">
