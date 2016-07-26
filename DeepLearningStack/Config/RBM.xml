@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<data>
+    <layer type="Visible" name="v1">
+        <batchsize></batchsize>
+        <numunits></numunits>
+        <type></type>
+    </layer>
+    <layer type="Hidden" name="h1">
+        <batchsize></batchsize>
+        <numunits></numunits>
+        <type></type>
+    </layer>
+</data>
