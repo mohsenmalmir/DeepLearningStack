@@ -29,6 +29,7 @@ class LSTM(object):
             """
 
         #inputs = [input,gate_input,previous_output]
+        layer_name= layer_def.attrib["name"]
         assert(len(inputs)==3)
         assert(len(inputs_shape)==3)
         self.input      = inputs[0]
@@ -56,9 +57,9 @@ class LSTM(object):
         else:
             W_bound  = np.sqrt(6. / (dim + gatein_dim))
             W_values = np.asarray(rng.normal(loc=0., scale=W_bound, size=(dim, gatein_dim)), dtype=theano.config.floatX)
-            self.W   = theano.shared(value=W_values, name='W', borrow=True)
+            self.W   = theano.shared(value=W_values, name=layer_name+'-W', borrow=True)
             b_values = init_bias * np.ones((dim,), dtype=theano.config.floatX)
-            self.b   = theano.shared(value=b_values, name='b', borrow=True)
+            self.b   = theano.shared(value=b_values, name=layer_name+'-b', borrow=True)
 
 
         self.forget       = T.nnet.sigmoid( T.dot(self.W, self.gate_input) + self.b.dimshuffle(0, 'x') )
