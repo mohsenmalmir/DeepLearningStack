@@ -26,6 +26,7 @@ class LU(object):
             
             :type rs: a random state
             """
+        layer_name= layer_def.attrib["name"]
         numUnits  = int(layer_def.find("numunits").text)
         init_bias = float(layer_def.find("bias").text)
         
@@ -43,9 +44,9 @@ class LU(object):
         else:
             W_bound  = 0.01#numpy.sqrt(6. / (n_in + n_out))
             W_values = np.asarray(rng.normal(loc=0., scale=W_bound, size=(numUnits, n_in)), dtype=theano.config.floatX)
-            self.W   = theano.shared(value=W_values, name='W', borrow=True)
+            self.W   = theano.shared(value=W_values, name=layer_name+"-W", borrow=True)
             b_values = init_bias * np.ones((numUnits,), dtype=theano.config.floatX)
-            self.b   = theano.shared(value=b_values, name='b', borrow=True)
+            self.b   = theano.shared(value=b_values, name=layer_name+"-b", borrow=True)
 
 
 #        self.output       = T.dot(gpu_contiguous(self.W), input) + T.tile(b.reshape([numUnits,1]),[1,batch_size])#gpu_contiguous(T.tile(self.b,[1,batch_size]))
