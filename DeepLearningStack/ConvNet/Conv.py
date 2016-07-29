@@ -30,6 +30,7 @@ class Conv(object):
 
             :type rs: a random number generator used to initialize weights
         """
+        layer_name    = layer_def.attrib["name"]
         convPadStride = [ int(layer_def.find("convpad").text),int(layer_def.find("convstride").text)]
         num_filters   = int(layer_def.find("numfilters").text)
         filter_size   = int(layer_def.find("filtersize").text)
@@ -43,8 +44,8 @@ class Conv(object):
         if clone_from is None:
             #W_bound   = 0.01#numpy.sqrt(6. / (fan_in + fan_out))
             W_bound   = np.sqrt( 2. / (filter_size*filter_size*image_channels) )#initialization from PRELU 
-            self.W    = theano.shared( np.asarray(rng.normal(loc=0., scale=W_bound, size=filter_shape), dtype=theano.config.floatX), borrow=True )
-            self.b    = theano.shared( np.asarray(init_bias*np.ones((num_filters,)), dtype=theano.config.floatX), borrow=True )
+            self.W    = theano.shared( np.asarray(rng.normal(loc=0., scale=W_bound, size=filter_shape), dtype=theano.config.floatX), borrow=True, name= layer_name+"-W")
+            self.b    = theano.shared( np.asarray(init_bias*np.ones((num_filters,)), dtype=theano.config.floatX), borrow=True , name=layer_name+"-b")
         else:
             self.W    = clone_from.W
             self.b    = clone_from.b
