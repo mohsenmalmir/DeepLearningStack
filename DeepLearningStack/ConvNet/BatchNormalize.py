@@ -42,7 +42,7 @@ class BatchNormalize(object):
         mn                = input.mean(axis=[0,3],keepdims=True)
         if clone_from==None: 
             self.gamma    = theano.shared( np.ones(nc).astype(theano.config.floatX) ,borrow=True,name=layer_name+"-gamma")
-            self.beta     = theano.shared( np.zeros(nc).astype(theano.config.floatX),borrow=Truem,name=layer_name+"-beta")
+            self.beta     = theano.shared( np.zeros(nc).astype(theano.config.floatX),borrow=True,name=layer_name+"-beta")
         else:
             self.gamma    = clone_from.gamma 
             self.beta     = clone_from.beta 
