@@ -36,6 +36,7 @@ from ..ConvNet.BatchNormalize       import BatchNormalize
 from ..Core.ElementWise             import ElementWise
 from ..RL.Gaussian                  import Gaussian
 from ..RL.GaussianObs               import GaussianObs
+from ..Mem.LSTM                     import LSTM 
 
 #maps type names into classes
 type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU,"Pool":Pool,
@@ -49,6 +50,7 @@ type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU
                     "ElementWise":ElementWise,
                     "Gaussian":Gaussian,
                     "GaussianObs":GaussianObs,
+                    "LSTM":LSTM,
                   }
 class RecurrentNet(object):
     """
