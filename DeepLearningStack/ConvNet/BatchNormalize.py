@@ -33,6 +33,7 @@ class BatchNormalize(object):
             :type rs: a random number generator used to initialize weights
             """
         self.epsilon      = float(layer_def.find("epsilon").text)
+        layer_name        = layer_def.attrib["name"]
     
         self.input        = input
         nc,h,w,b          = input_shape
@@ -40,8 +41,8 @@ class BatchNormalize(object):
         std               = input.std(axis=[0,3],keepdims=True) + self.epsilon#take the std over batches
         mn                = input.mean(axis=[0,3],keepdims=True)
         if clone_from==None: 
-            self.gamma    = theano.shared( np.ones(nc).astype(theano.config.floatX) ,borrow=True)
-            self.beta     = theano.shared( np.zeros(nc).astype(theano.config.floatX),borrow=True)
+            self.gamma    = theano.shared( np.ones(nc).astype(theano.config.floatX) ,borrow=True,name=layer_name+"-gamma")
+            self.beta     = theano.shared( np.zeros(nc).astype(theano.config.floatX),borrow=Truem,name=layer_name+"-beta")
         else:
             self.gamma    = clone_from.gamma 
             self.beta     = clone_from.beta 
