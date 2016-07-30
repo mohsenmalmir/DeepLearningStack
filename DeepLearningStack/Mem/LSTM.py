@@ -55,10 +55,10 @@ class LSTM(object):
             self.W   = clone_from.W
             self.b   = clone_from.b
         else:
-            W_bound  = np.sqrt(6. / (dim + gatein_dim))
+            W_bound  = np.sqrt(6. / (self.num_units + gatein_dim))
             W_values = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, gatein_dim)), dtype=theano.config.floatX)
             self.W   = theano.shared(value=W_values, name=layer_name+'-W', borrow=True)
-            b_values = init_bias * np.ones((dim,), dtype=theano.config.floatX)
+            b_values = init_bias * np.ones((self.num_units,), dtype=theano.config.floatX)
             self.b   = theano.shared(value=b_values, name=layer_name+'-b', borrow=True)
 
                                         #W:num_unitsxgatein_dim    gate_input:gatein_dimxbsz forget:num_unitsxbsz prev_out:num_unitsxbsz
