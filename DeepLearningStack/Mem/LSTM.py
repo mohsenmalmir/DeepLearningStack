@@ -126,11 +126,17 @@ class LSTM(object):
         self.c          = self.fgate * slf.prev_c + self.igate * self.tilde_c#updated memory content
         self.ogate      = T.sigmoid( T.dot(self.W_o, self.input) + T.dot(self.U_o,self.prev_h) + self.V_o.dimshuffle(0,'x') * self.c )#output gate
         #output is a dictionary
+        #only if there is a mem output tag, then provide this output
+        multiouts       = layer_def.findall("output")
+        for out in multiouts:
+            if out.attrib["name"].lower()=="mem":
+                self.output[out.text] = self.c
+                self.output_shape[out.text] = [self.num_units,batch_size]
+        #the default output
         self.output[layer_name] = self.ogate * T.tanh(self.c)
-        self.output["memory"] = self.c
-        # parameters of the model
+        self.output_shape[layer_name] = [self.num_units,batch_size]
         self.inputs_shape = inputs_shape
-        self.output_shape = [self.num_units,batch_size]
+        # parameters of the model
         if clone_from==None
             self.params   = [self.W_o,self.W_f,self.W_i,self.W_c,self.U_o, self.U_f, self.U_i, self.U_c, self.V_o, self.V_f,self.V_i]
         else:

@@ -90,7 +90,7 @@
         <input>gate_in</input>
         <input>prev_output</input>
         <numunits></numunits>
-        <bias></bias>
+        <output name="mem" feedback="yes"></output>
     </layer>
     <layer type="Gaussian" name="gn1">
         <numunits></numunits>

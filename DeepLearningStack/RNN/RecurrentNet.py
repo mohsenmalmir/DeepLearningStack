@@ -151,7 +151,7 @@ class RecurrentNet(object):
             :param net_prev_timestep: this is the network created for the previous time step. It is used to tie the weights for current time step. 
         """
         #building network 
-        supplied_inputs  = copy.copy(nonrcrnt_inputs)
+        supplied_inputs  = copy.copy(nonrcrnt_inputs)#non-recurrent inputs, i.e. inputs from the current time step
         layers_def       = copy.copy(layers_def)
         netbuilt         = False
         layers           = []
@@ -194,13 +194,14 @@ class RecurrentNet(object):
                         symvar_inputs = symvar_inputs[0]
                         symvar_sizes  = symvar_sizes[0]
                     #print("layer sizes:",symvar_sizes)
+                    #priority of weight cloning: clone_from > tie > normal
                     #if tying from the previous time step 
                     if net_prev_timestep!=None and (layer_name in net_prev_timestep.keys()):
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[layer_name])
                         tied[layer_name]      = True#if this is a copy from the previous time step, then it is tied 
                     #tying from the current time step
                     elif tie_from!=None:#if the parameters are tied to gether
-                        newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[tie_from])
+                        newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=name2layer[tie_from])
                         tied[layer_name]      = True#if this is a tie from current time step, 
                     #otherwise simply create it with regular initialization of parameters
                     else:
@@ -209,13 +210,31 @@ class RecurrentNet(object):
                         params               += newLayer.params
                     layers.append(newLayer)#create layer from xml definition
                     name2layer[layer_name]          = newLayer
-                    supplied_inputs[layer_name]     = [newLayer.output, newLayer.output_shape]
-                    output_dims[layer_name]         = newLayer.output_shape
-                    layers_def.remove(layer)
-                    #produce a separate list for recurrent outputs
+                    #if output is a dictionary, i.e. there are multiple outputs, then the default output is the one with the layer name
+                    if type(newLayer.output)==dict:
+                        supplied_inputs[layer_name]     = (newLayer.output[layer_name], newLayer.output_shape[layer_name])
+                        output_dims[layer_name]         = newLayer.output_shape[layer_name]
+                    else:#if it has a single output, then use that as the default output
+                        supplied_inputs[layer_name]     = (newLayer.output, newLayer.output_shape)
+                        output_dims[layer_name]         = newLayer.output_shape
+                    #also look into <output> tags, as they provide further outputs
+                    multiouts                           = layer.findall("output")
+                    for out in multiouts:
+                        #for multioutputs, add each one to the list of supplied inputs regardless of their feedback property
+                        #the ambiguity between recurrent and non-recurrent inputs is resolved in the input vs. recurrent input tag
+                        supplied_inputs[out.text]   = [newLayer.output[out.text], newLayer.output_shape[out.text]]
+                        output_dims[out.text]           = newLayer.output_shape[out.text]
+                        #multiple, recurrent output
+                        if out.attrib["feedbatck_output"].lower()=="yes":
+                            rcrnt_output[out.text]      = (newLayer.output[out.text], newLayer.output_shape[out.text])
+                    #the default output of the layer
                     if "feedback_output" in layer.attrib.keys():
                         if layer.attrib["feedback_output"].lower()=="yes":
-                            rcrnt_output[layer_name] = (newLayer.output, newLayer.output_shape)
+                            if type(newLayer.output)==dict:
+                                rcrnt_output[layer_name] = (newLayer.output[layer_name], newLayer.output_shape[layer_name])
+                            else:#if it has a single output, then use that as the default output
+                                rcrnt_output[layer_name] = (newLayer.output, newLayer.output_shape)
+                    layers_def.remove(layer)
             if len(layers_def)==0:
                 netbuilt = True
             elif layer_added==False:
