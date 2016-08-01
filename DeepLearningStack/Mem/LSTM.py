@@ -137,7 +137,7 @@ class LSTM(object):
         self.output_shape[layer_name] = [self.num_units,batch_size]
         self.inputs_shape = inputs_shape
         # parameters of the model
-        if clone_from==None
+        if clone_from==None:
             self.params   = [self.W_o,self.W_f,self.W_i,self.W_c,self.U_o, self.U_f, self.U_i, self.U_c, self.V_o, self.V_f,self.V_i]
         else:
             self.params   = []
