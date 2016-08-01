@@ -127,6 +127,7 @@ class LSTM(object):
         self.ogate      = T.nnet.sigmoid( T.dot(self.W_o, self.input) + T.dot(self.U_o,self.prev_h) + self.V_o.dimshuffle(0,'x') * self.c )#output gate
         #output is a dictionary
         #only if there is a mem output tag, then provide this output
+        self.output     = dict()
         multiouts       = layer_def.findall("output")
         for out in multiouts:
             if out.attrib["type"].lower()=="mem":
