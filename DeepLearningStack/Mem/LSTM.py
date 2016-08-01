@@ -123,7 +123,7 @@ class LSTM(object):
         self.fgate      = T.nnet.sigmoid( T.dot(self.W_f, self.input) + T.dot(self.U_f,self.prev_h) + self.V_f.dimshuffle(0,'x') * self.prev_c )#forget gate
         self.igate      = T.nnet.sigmoid( T.dot(self.W_i, self.input) + T.dot(self.U_i,self.prev_h) + self.V_i.dimshuffle(0,'x') * self.prev_c )#input gate
         self.tilde_c    = T.tanh(    T.dot(self.W_c, self.input) + T.dot(self.U_c,self.prev_h) )#new memory content
-        self.c          = self.fgate * slf.prev_c + self.igate * self.tilde_c#updated memory content
+        self.c          = self.fgate * self.prev_c + self.igate * self.tilde_c#updated memory content
         self.ogate      = T.nnet.sigmoid( T.dot(self.W_o, self.input) + T.dot(self.U_o,self.prev_h) + self.V_o.dimshuffle(0,'x') * self.c )#output gate
         #output is a dictionary
         #only if there is a mem output tag, then provide this output
