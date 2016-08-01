@@ -11,7 +11,7 @@ from theano.sandbox.cuda.basic_ops import gpu_contiguous
 """
 The implementation in this code follows the details of:
 
-Cho K, Van Merriënboer B, Bahdanau D, Bengio Y. 
+Cho K, Van Merrienboer B, Bahdanau D, Bengio Y. 
 On the properties of neural machine translation: 
 Encoder-decoder approaches. 
 arXiv preprint arXiv:1409.1259. 2014 Sep 3.
