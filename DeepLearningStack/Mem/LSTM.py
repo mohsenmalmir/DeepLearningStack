@@ -21,9 +21,6 @@ class LSTM(object):
     def __init__(self,layer_def,inputs,inputs_shape,rs,clone_from=None):
         """
             Create an LSTM layer with shared variable internal parameters.
-            This is a fully connected layer, with inputs from the previous step,
-            We used a forget gate only, output = (1-forget) * prev_out + forget * input
-            
             :type layer_def: Element, xml containing configu for Conv layer
             
             :type inputs: list of inputs [input,gate_input,prev_output] 
@@ -92,7 +89,7 @@ class LSTM(object):
             self.W_c    = theano.shared(value=W_values, name=layer_name+'-Wc', borrow=False)
 
             #U_{}: is a matrix of size num_units x num_units 
-            U_bound     = np.sqrt(6. / (self.num_units *self.num_units))
+            U_bound     = np.sqrt(6. / (self.num_units +self.num_units))
             #U_o
             U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
             self.U_o    = theano.shared(value=U_values, name=layer_name+'-Uo', borrow=False)
@@ -107,7 +104,7 @@ class LSTM(object):
             self.U_c    = theano.shared(value=U_values, name=layer_name+'-Uc', borrow=False)
 
             #V_{}: is a diagonal matrix of size num_units x num_units 
-            V_bound     = np.sqrt(6. / (self.num_units*self.num_units ))
+            V_bound     = np.sqrt(6. / (self.num_units+self.num_units ))
             #U_o
             V_values    = np.asarray(rng.normal(loc=0., scale=V_bound, size=(self.num_units, )), dtype=theano.config.floatX)
             self.V_o    = theano.shared(value=V_values, name=layer_name+'-Vo', borrow=False)

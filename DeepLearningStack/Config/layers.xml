@@ -92,6 +92,11 @@
         <numunits></numunits>
         <output name="mem" feedback="yes"></output>
     </layer>
+    <layer type="GRU" name="gru">
+        <input>in</input>
+        <input>prev_out</input>
+        <numunits></numunits>
+    </layer>
     <layer type="Gaussian" name="gn1">
         <numunits></numunits>
         <input></input>
