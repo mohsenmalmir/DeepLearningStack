@@ -129,7 +129,7 @@ class LSTM(object):
         #only if there is a mem output tag, then provide this output
         multiouts       = layer_def.findall("output")
         for out in multiouts:
-            if out.attrib["name"].lower()=="mem":
+            if out.attrib["type"].lower()=="mem":
                 self.output[out.text] = self.c
                 self.output_shape[out.text] = [self.num_units,batch_size]
         #the default output
