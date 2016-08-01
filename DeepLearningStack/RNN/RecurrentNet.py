@@ -37,6 +37,7 @@ from ..Core.ElementWise             import ElementWise
 from ..RL.Gaussian                  import Gaussian
 from ..RL.GaussianObs               import GaussianObs
 from ..Mem.LSTM                     import LSTM 
+from ..Mem.GRU                      import GRU 
 
 #maps type names into classes
 type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU,"Pool":Pool,
@@ -51,6 +52,7 @@ type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU
                     "Gaussian":Gaussian,
                     "GaussianObs":GaussianObs,
                     "LSTM":LSTM,
+                    "GRU":GRU,
                   }
 class RecurrentNet(object):
     """
