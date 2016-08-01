@@ -8,6 +8,12 @@ import theano
 import theano.tensor as T
 from theano.sandbox.cuda.basic_ops import gpu_contiguous
 
+"""
+The implementation in this code follows the details of:
+
+Graves A. Generating sequences with recurrent neural networks. 
+arXiv preprint arXiv:1308.0850. 2013 Aug 4.
+"""
 
 # implementing linear unit
 class LSTM(object):
@@ -21,9 +27,9 @@ class LSTM(object):
             :type layer_def: Element, xml containing configu for Conv layer
             
             :type inputs: list of inputs [input,gate_input,prev_output] 
-            :param inputs[0]: input, the input which is a theano.matrix
-            :param inputs[1]: gate_input, the input based on which the gate activities are determined
-            :param inputs[2]: prev_output, the feedback input to LSTM
+            :param inputs[0]: input, the input which is a theano.matrix, x_t
+            :param inputs[1]: previous state, h_{t-1}, same shape as this layer
+            :param inputs[2]: previous memory, c_{t-1}, same shape as this layer
             
             :type rs: a random state
             """
@@ -33,11 +39,15 @@ class LSTM(object):
         assert(len(inputs)==3)
         assert(len(inputs_shape)==3)
         self.input      = inputs[0]
-        self.gate_input = inputs[1]
-        self.prev_out   = inputs[2]
-        dim,batch_size  = inputs_shape[0]
-        gatein_dim,bsz  = inputs_shape[1]
-        assert(bsz == batch_size)
+        self.prev_h     = inputs[1]
+        self.prev_c     = inputs[2]
+        n_in,_          = inputs_shape[0]
+        n_prev_v,bsz    = inputs_shape[1]
+        assert(bsz == inputs_shape[0][1])
+        assert(bsz == inputs_shape[2][1])
+        #make sure previous h,c have the same dimensions
+        assert(inputs_shape[2][0] == inputs_shape[1][0])
+        assert(inputs_shape[2][1] == inputs_shape[1][1])
         
         # clone the num_units 
         if clone_from==None:
@@ -45,27 +55,84 @@ class LSTM(object):
         else:
             self.num_units = clone_from.num_units
 
-        assert(inputs_shape[2][0] == self.num_units)
-        assert(inputs_shape[2][1] == batch_size)
-        init_bias = float(layer_def.find("bias").text)
+        assert(n_prev_v == self.num_units)
 
+        #create the weight matrices
         rng             = np.random.RandomState(seed=int(time.time()))
         # initialize weights with random weights
         if clone_from!=None:
-            self.W   = clone_from.W
-            self.b   = clone_from.b
+            #weight matrices for x_t, the input
+            self.W_o    = clone_from.W_o
+            self.W_f    = clone_from.W_f
+            self.W_i    = clone_from.W_i
+            self.W_c    = clone_from.W_c
+            #weight matrices for h_{t-1}
+            self.U_o    = clone_from.U_o
+            self.U_f    = clone_from.U_f
+            self.U_i    = clone_from.U_i
+            self.U_c    = clone_from.U_c
+            #weight matrices (diagonal) for previous memory c_{t-1}
+            self.V_o    = clone_from.V_o
+            self.V_f    = clone_from.V_f
+            self.V_i    = clone_from.V_i
         else:
-            W_bound  = np.sqrt(6. / (self.num_units + gatein_dim))
-            W_values = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, gatein_dim)), dtype=theano.config.floatX)
-            self.W   = theano.shared(value=W_values, name=layer_name+'-W', borrow=True)
-            b_values = init_bias * np.ones((self.num_units,), dtype=theano.config.floatX)
-            self.b   = theano.shared(value=b_values, name=layer_name+'-b', borrow=True)
+            #W_{}: is a matrix of size num_units x n_in
+            W_bound     = np.sqrt(6. / (self.num_units + n_in))
+            #W_o
+            W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
+            self.W_o    = theano.shared(value=W_values, name=layer_name+'-Wo', borrow=False)
+            #W_f
+            W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
+            self.W_f    = theano.shared(value=W_values, name=layer_name+'-Wf', borrow=False)
+            #W_i
+            W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
+            self.W_i    = theano.shared(value=W_values, name=layer_name+'-Wi', borrow=False)
+            #W_c
+            W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
+            self.W_c    = theano.shared(value=W_values, name=layer_name+'-Wc', borrow=False)
 
-                                        #W:num_unitsxgatein_dim    gate_input:gatein_dimxbsz forget:num_unitsxbsz prev_out:num_unitsxbsz
-        self.forget       = T.nnet.sigmoid( T.dot(self.W, self.gate_input) + self.b.dimshuffle(0, 'x') )
-        self.output       = ( 1. - self.forget ) * self.prev_out + self.forget * self.input 
+            #U_{}: is a matrix of size num_units x num_units 
+            U_bound     = np.sqrt(6. / (self.num_units *self.num_units))
+            #U_o
+            U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
+            self.U_o    = theano.shared(value=U_values, name=layer_name+'-Uo', borrow=False)
+            #U_f
+            U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
+            self.U_f    = theano.shared(value=U_values, name=layer_name+'-Uf', borrow=False)
+            #U_i
+            U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
+            self.U_i    = theano.shared(value=U_values, name=layer_name+'-Ui', borrow=False)
+            #U_c
+            U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
+            self.U_c    = theano.shared(value=U_values, name=layer_name+'-Uc', borrow=False)
+
+            #V_{}: is a diagonal matrix of size num_units x num_units 
+            V_bound     = np.sqrt(6. / (self.num_units*self.num_units ))
+            #U_o
+            V_values    = np.asarray(rng.normal(loc=0., scale=V_bound, size=(self.num_units, )), dtype=theano.config.floatX)
+            self.V_o    = theano.shared(value=V_values, name=layer_name+'-Vo', borrow=False)
+            #U_f
+            V_values    = np.asarray(rng.normal(loc=0., scale=V_bound, size=(self.num_units, )), dtype=theano.config.floatX)
+            self.V_f    = theano.shared(value=V_values, name=layer_name+'-Vf', borrow=False)
+            #U_i
+            V_values    = np.asarray(rng.normal(loc=0., scale=V_bound, size=(self.num_units, )), dtype=theano.config.floatX)
+            self.V_i    = theano.shared(value=V_values, name=layer_name+'-Vi', borrow=False)
+
+
+        #calculate the gate values
+        self.fgate      = T.sigmoid( T.dot(self.W_f, self.input) + T.dot(self.U_f,self.prev_h) + self.V_f.dimshuffle(0,'x') * self.prev_c )#forget gate
+        self.igate      = T.sigmoid( T.dot(self.W_i, self.input) + T.dot(self.U_i,self.prev_h) + self.V_i.dimshuffle(0,'x') * self.prev_c )#input gate
+        self.tilde_c    = T.tanh(    T.dot(self.W_c, self.input) + T.dot(self.U_c,self.prev_h) )#new memory content
+        self.c          = self.fgate * slf.prev_c + self.igate * self.tilde_c#updated memory content
+        self.ogate      = T.sigmoid( T.dot(self.W_o, self.input) + T.dot(self.U_o,self.prev_h) + self.V_o.dimshuffle(0,'x') * self.c )#output gate
+        #output is a dictionary
+        self.output[layer_name] = self.ogate * T.tanh(self.c)
+        self.output["memory"] = self.c
         # parameters of the model
         self.inputs_shape = inputs_shape
         self.output_shape = [self.num_units,batch_size]
-        self.params       = [self.W,self.b]
+        if clone_from==None
+            self.params   = [self.W_o,self.W_f,self.W_i,self.W_c,self.U_o, self.U_f, self.U_i, self.U_c, self.V_o, self.V_f,self.V_i]
+        else:
+            self.params   = []
 
