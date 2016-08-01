@@ -132,10 +132,10 @@ class LSTM(object):
         for out in multiouts:
             if out.attrib["type"].lower()=="mem":
                 self.output[out.text] = self.c
-                self.output_shape[out.text] = [self.num_units,batch_size]
+                self.output_shape[out.text] = [self.num_units,bsz]
         #the default output
         self.output[layer_name] = self.ogate * T.tanh(self.c)
-        self.output_shape[layer_name] = [self.num_units,batch_size]
+        self.output_shape[layer_name] = [self.num_units,bsz]
         self.inputs_shape = inputs_shape
         # parameters of the model
         if clone_from==None:
