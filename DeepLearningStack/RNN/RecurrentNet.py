@@ -200,7 +200,7 @@ class RecurrentNet(object):
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=net_prev_timestep[layer_name])
                         tied[layer_name]      = True#if this is a copy from the previous time step, then it is tied 
                     #tying from the current time step
-                    elif tie_from!=None:#if the parameters are tied to gether
+                    elif tie_from!=None and (layer_name in name2layer.keys()):#if the parameters are tied to gether
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=name2layer[tie_from])
                         tied[layer_name]      = True#if this is a tie from current time step, 
                     #otherwise simply create it with regular initialization of parameters

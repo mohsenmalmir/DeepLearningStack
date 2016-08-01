@@ -114,18 +114,23 @@ class FeedForwardNet(object):
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=clone_from.name2layer[layer_name])
                         self.tied[layer_name] = clone_from.tied[layer_name]#this layer is cloned  
                     #else if it is tied, then create it using the tied network
-                    elif tie_from!=None:#if the parameters are tied to gether
+                    elif tie_from!=None and (layer_name in self.name2layer.keys()):#if the parameters are tied to gether
                         newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng,clone_from=self.name2layer[tie_from])
                         self.tied[layer_name] = True 
                     #otherwise simply create it with regular initialization of parameters
                     else:
-                        newLayer    = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng)
+                        newLayer              = type2class[layer_type](layer,symvar_inputs,symvar_sizes,rng)
                         self.tied[layer_name] = False 
+                        self.params           += newLayer.params
+
                     self.layers.append(newLayer)#create layer from xml definition
                     self.name2layer[layer_name]          = newLayer
-                    self.params                         += newLayer.params
-                    self.supplied_inputs[layer_name]     = newLayer.output
-                    self.output_dims[layer_name]         = newLayer.output_shape
+                    if type(newLayer.output)==dict:
+                        self.supplied_inputs[layer_name]     = newLayer.output[layer_name]
+                        self.output_dims[layer_name]         = newLayer.output_shape[layer_name]
+                    else:
+                        self.supplied_inputs[layer_name]     = newLayer.output
+                        self.output_dims[layer_name]         = newLayer.output_shape
                     layers_def.remove(layer)
                     layer_added                          = True
             if len(layers_def)==0:
