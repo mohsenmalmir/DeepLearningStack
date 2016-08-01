@@ -225,7 +225,7 @@ class RecurrentNet(object):
                         supplied_inputs[out.text]   = [newLayer.output[out.text], newLayer.output_shape[out.text]]
                         output_dims[out.text]           = newLayer.output_shape[out.text]
                         #multiple, recurrent output
-                        if out.attrib["feedbatck_output"].lower()=="yes":
+                        if out.attrib["feedback_output"].lower()=="yes":
                             rcrnt_output[out.text]      = (newLayer.output[out.text], newLayer.output_shape[out.text])
                     #the default output of the layer
                     if "feedback_output" in layer.attrib.keys():
