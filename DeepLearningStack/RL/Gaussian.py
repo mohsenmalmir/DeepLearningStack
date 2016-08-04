@@ -33,7 +33,7 @@ class Gaussian(object):
         rng             = np.random.RandomState(seed=int(time.time()))
         self.input      = input
         n_in,batch_size = input_shape
-        assert(n_in == batch_size)
+        assert(n_in == numUnits)
         #the parameters of this model are a matrix of size mu = n_in x numUnits, var= n_in x numUnits 
         # initialize mean and variance 
         if clone_from!=None:
