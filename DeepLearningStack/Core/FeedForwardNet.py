@@ -94,8 +94,8 @@ class FeedForwardNet(object):
                 #indicates if the parameters have to be the same as some other layer
                 tie_from              = layer.find("tie").text if layer.find("tie") is not None else None
                 #check if all the inputs to the network are already supplied
-                inputs_text           = [inp.text for inp in inputs]
-                input_satiesfied      = [inp.text in self.supplied_inputs.keys() for inp in inputs]
+                inputs_text           = [inp.text for inp in layer_inputs]
+                input_satiesfied      = [inp.text in self.supplied_inputs.keys() for inp in layer_inputs]
                 #if a layer's params are tied to another layer, make sure the first layer is already created
                 if tie_from != None and tie_from not in self.name2layer.keys():
                     continue
