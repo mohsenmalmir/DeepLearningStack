@@ -37,23 +37,29 @@ class BatchNormalize(object):
     
         self.input        = input
 
-        if clone_from==None: 
-            self.gamma    = theano.shared( np.ones(nc).astype(theano.config.floatX) ,borrow=True,name=layer_name+"-gamma")
-            self.beta     = theano.shared( np.zeros(nc).astype(theano.config.floatX),borrow=True,name=layer_name+"-beta")
-        else:
-            self.gamma    = clone_from.gamma 
-            self.beta     = clone_from.beta 
 
 
 
         if len(input_shape)==4:
             nc,h,w,b          = input_shape
+            if clone_from==None: 
+                self.gamma    = theano.shared( np.ones(nc).astype(theano.config.floatX) ,borrow=True,name=layer_name+"-gamma")
+                self.beta     = theano.shared( np.zeros(nc).astype(theano.config.floatX),borrow=True,name=layer_name+"-beta")
+            else:
+                self.gamma    = clone_from.gamma 
+                self.beta     = clone_from.beta 
             #the variance is calculated over batches and over a feature map
             std               = input.std(axis=[0,3],keepdims=True) + self.epsilon#take the std over batches
             mn                = input.mean(axis=[0,3],keepdims=True)
             self.output       = self.gamma.dimshuffle(0, 'x', 'x','x') * ( (input - mn)/ std ) + self.beta.dimshuffle(0, 'x', 'x','x') #normalize each dimension
         elif len(input_shape)==2:
             n,b               = input_shape
+            if clone_from==None: 
+                self.gamma    = theano.shared( np.ones(n).astype(theano.config.floatX) ,borrow=True,name=layer_name+"-gamma")
+                self.beta     = theano.shared( np.zeros(n).astype(theano.config.floatX),borrow=True,name=layer_name+"-beta")
+            else:
+                self.gamma    = clone_from.gamma 
+                self.beta     = clone_from.beta 
             #the variance is calculated over batches and over a feature map
             std               = input.std(axis=1,keepdims=True) + self.epsilon#take the std over batches
             mn                = input.mean(axis=1,keepdims=True)
