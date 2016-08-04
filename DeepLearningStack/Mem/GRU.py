@@ -29,7 +29,6 @@ class GRU(object):
             :type inputs: list of inputs [input,gate_input,prev_output] 
             :param inputs[0]: input, the input which is a theano.matrix, x_t
             :param inputs[1]: previous state, h_{t-1}, same shape as this layer
-            :param inputs[2]: previous memory, c_{t-1}, same shape as this layer
             
             :type rs: a random state
             """
