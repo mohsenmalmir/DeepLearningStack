@@ -54,7 +54,7 @@ type2class      = {"Data":Data, "Conv":Conv, "Flatten":Flatten,"LRN":LRN,"LU":LU
 # Stack of ReLU followed by LU
 class FeedForwardNet(object):
 
-    def __init__(self, rng, input, configFile, clone_from=None):
+    def __init__(self, rng, inputs, configFile, clone_from=None):
         """Initialize the parameters for the Deep Net
 
         :type rng: numpy.random.RandomState
@@ -70,9 +70,9 @@ class FeedForwardNet(object):
         :param clone_from: This graph should contain all the weights, from which the current network will be initialized.
         :                   This is useful in cases such as transferring the weights to a different architecture that shares some layers  
         """
-        self.supplied_inputs      = input#dict of name:symvar
+        self.supplied_inputs      = inputs#dict of name:symvar
         self.output_dims          = dict()#dictionary of inp:size for the input
-        for inp_name in input.keys():
+        for inp_name in inputs.keys():
             self.output_dims[inp_name] = []
         tree                      = ET.parse(configFile)
         root                      = tree.getroot()
