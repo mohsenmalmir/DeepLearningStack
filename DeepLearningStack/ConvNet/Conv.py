@@ -39,7 +39,7 @@ class Conv(object):
 
         
         self.input    = gpu_contiguous(input)
-        image_channels,image_size,_,batch_size    = input_shape
+        image_channels,image_size0,image_size1,batch_size    = input_shape
         filter_shape                              = [image_channels,filter_size,filter_size,num_filters]#c01b
         if clone_from is None:
             #W_bound   = 0.01#numpy.sqrt(6. / (fan_in + fan_out))
@@ -56,9 +56,10 @@ class Conv(object):
         self.output        = conv_op(self.input, contiguous_filters) + self.b.dimshuffle(0, 'x', 'x','x')
 
         #output size is equal to (image+2*pad - filter_size + 1) / stride
-        output_size        = (image_size + 2 * convPadStride[0] - filter_size + 1 ) / convPadStride[1] + (1 if convPadStride[1]>1 else 0)
+        output_size0       = (image_size0 + 2 * convPadStride[0] - filter_size + 1 ) / convPadStride[1] + (1 if convPadStride[1]>1 else 0)
+        output_size1       = (image_size1 + 2 * convPadStride[0] - filter_size + 1 ) / convPadStride[1] + (1 if convPadStride[1]>1 else 0)
         self.input_shape   = input_shape#[filter_shape[0],img_size,img_size,filter_shape[0]]#c01b
-        self.output_shape  = [num_filters, output_size, output_size, batch_size]#c01b
+        self.output_shape  = [num_filters, output_size0, output_size1, batch_size]#c01b
         self.params        = [self.W,self.b]
 
 
