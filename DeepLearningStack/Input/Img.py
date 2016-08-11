@@ -50,10 +50,10 @@ class Img(object):
         
 
         self.input_shape   = input_shape
-        self.output_shape  = [image_channels,image_size,image_size,batch_size]#c01b
+        _,size0,size1,_    = input_shape
+        self.output_shape  = [image_channels,size0,size1,batch_size]#c01b
         self.input         = input
         self.output        = input
-#        self.output        = input.dimshuffle(3,1,2,0)#b01c -> c01b
         self.params        = []
 
 
