@@ -60,8 +60,8 @@ class FeedForwardNet(object):
         :type rng: numpy.random.RandomState
         :param rng: a random number generator used to initialize weights
 
-        :type input: theano.tensor.tensor4
-        :param input: symbolic variable that represents image batch
+        :type inputs: list of dictionaries 
+        :param input: this is a list of (symvar, size) for the inputs to the network 
 
         :type configFile: filename containing the network architecture
          
@@ -70,10 +70,11 @@ class FeedForwardNet(object):
         :param clone_from: This graph should contain all the weights, from which the current network will be initialized.
         :                   This is useful in cases such as transferring the weights to a different architecture that shares some layers  
         """
-        self.supplied_inputs      = inputs#dict of name:symvar
+        self.supplied_inputs      = dict()#dict of name:symvar
         self.output_dims          = dict()#dictionary of inp:size for the input
         for inp_name in inputs.keys():
-            self.output_dims[inp_name] = []
+            self.supplied_inputs[inp_name]  = inputs[inp_name][0] 
+            self.output_dims[inp_name]      = inputs[inp_name][1] 
         tree                      = ET.parse(configFile)
         root                      = tree.getroot()
         layers_def                = []
