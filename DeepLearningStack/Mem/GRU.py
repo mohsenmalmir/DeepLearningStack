@@ -68,29 +68,32 @@ class GRU(object):
             W_bound     = np.sqrt(6. / (self.num_units + n_in))
             #W_o
             W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
-            self.W_z    = theano.shared(value=W_values, name=layer_name+'-Wz', borrow=False)
+            self.W_z    = theano.shared(value=W_values, name=layer_name+'-Wz', borrow=False)# num_units x n_in
             #W_f
             W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
-            self.W_r    = theano.shared(value=W_values, name=layer_name+'-Wr', borrow=False)
+            self.W_r    = theano.shared(value=W_values, name=layer_name+'-Wr', borrow=False)# num_units x n_in
             #W_i
             W_values    = np.asarray(rng.normal(loc=0., scale=W_bound, size=(self.num_units, n_in)), dtype=theano.config.floatX)
-            self.W      = theano.shared(value=W_values, name=layer_name+'-W', borrow=False)
+            self.W      = theano.shared(value=W_values, name=layer_name+'-W', borrow=False)# num_units x n_in
 
             #U_{}: is a matrix of size num_units x num_units 
             U_bound     = np.sqrt(6. / (self.num_units +self.num_units))
             #U_o
             U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
-            self.U_z    = theano.shared(value=U_values, name=layer_name+'-Uz', borrow=False)
+            self.U_z    = theano.shared(value=U_values, name=layer_name+'-Uz', borrow=False)#num_units x num_units
             #U_f
             U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
-            self.U_r    = theano.shared(value=U_values, name=layer_name+'-Ur', borrow=False)
+            self.U_r    = theano.shared(value=U_values, name=layer_name+'-Ur', borrow=False)#num_units x num_units
             #U_i
             U_values    = np.asarray(rng.normal(loc=0., scale=U_bound, size=(self.num_units, self.num_units)), dtype=theano.config.floatX)
-            self.U      = theano.shared(value=U_values, name=layer_name+'-U', borrow=False)
+            self.U      = theano.shared(value=U_values, name=layer_name+'-U', borrow=False)#num_units x num_units
 
         #calculate the gate values
+                                            # num_units x bsz               #num_units x bsz
         self.zgate      = T.nnet.sigmoid( T.dot(self.W_z, self.input) + T.dot(self.U_z,self.prev_h) )#update gate
+                                            # num_units x bsz               #num_units x bsz
         self.rgate      = T.nnet.sigmoid( T.dot(self.W_r, self.input) + T.dot(self.U_r,self.prev_h) )#reset gate
+                                            # num_units x bsz       #num_units x bsz
         self.tilde_h    = T.tanh( T.dot(self.W, self.input) + T.dot(self.U,( self.rgate * self.prev_h) ) )#new memory content
         #output is a dictionary
         #only if there is a mem output tag, then provide this output
