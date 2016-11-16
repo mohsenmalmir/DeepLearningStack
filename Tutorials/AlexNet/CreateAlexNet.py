@@ -24,7 +24,7 @@ if __name__=="__main__":
     lr		          = T.scalar("lr")#learning rate for weight update, defined as sym var to be updatable during training
 
     #create the graph structure
-    net1              = FeedForwardNet.FeedForwardNet(rng,{"input":images}, config)
+    net1              = FeedForwardNet.FeedForwardNet(rng,{"input":(images,[3,128,128,256])}, config)
 
 
 
