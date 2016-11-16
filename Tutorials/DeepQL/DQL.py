@@ -126,8 +126,8 @@ for exp_num in range(20):
     input      = T.matrix("data",dtype=theano.config.floatX)#the input is concatenation of action history and beliefs
     config     = "DQLArch.xml"
     rng        = RandomStreams(seed=int(time.time()))
-    train_net  = FeedForwardNet.FeedForwardNet(rng,{"input":input},config)
-    test_net   = FeedForwardNet.FeedForwardNet(rng,{"input":input},config,clone_from=train_net)
+    train_net  = FeedForwardNet.FeedForwardNet(rng,{"input":(input,[128,136])},config)
+    test_net   = FeedForwardNet.FeedForwardNet(rng,{"input":(input,[128,136])},config,clone_from=train_net)
     pprint.pprint(train_net.output_dims)
 
     print("##################################################")
